@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Kinerja CPNS & Pegawai - KPU Kabupaten Serdang Bedagai</title>
+  <title>E-Kinerja PNS & Pegawai - KPU Kabupaten Serdang Bedagai</title>
   
-  <!-- Favicon (Logo KPU) -->
-  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png">
+  <!-- Favicon Logo KPU Vector Data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23b91c1c' rx='20'/><path d='M30 20h40v60H30z' fill='%23ffffff'/><path d='M35 25h30v15H35z' fill='%23b91c1c'/><text x='50' y='36' font-size='10' font-weight='bold' fill='%23ffffff' text-anchor='middle'>KPU</text><path d='M35 45h30v30H35z' fill='%23f59e0b'/></svg>">
   
   <!-- Tailwind CSS & FontAwesome & Animate.css -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -71,80 +71,88 @@
     }
 
     .glass-effect {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
     }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-red-500 selection:text-white">
+<body class="bg-slate-900 min-h-screen text-slate-800 antialiased selection:bg-red-500 selection:text-white">
 
   <!-- ==================== AUTH / LOGIN / REGISTER MODAL ==================== -->
-  <div id="authScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto animate__animated animate__fadeIn">
-    <div class="bg-white/95 glass-effect rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 border border-white/20 my-8 animate__animated animate__zoomIn">
+  <div id="authScreen" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/20 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn">
       
-      <!-- Header Login dengan Logo KPU -->
-      <div class="text-center mb-6">
-        <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg p-2 border border-slate-100">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png" alt="Logo KPU" class="w-full h-full object-contain">
+      <!-- Header Login dengan Logo Vector KPU -->
+      <div class="text-center mb-5 flex-shrink-0">
+        <div class="w-16 h-16 md:w-20 md:h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800">
+          <!-- Vector SVG Logo KPU -->
+          <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="15" fill="#B91C1C"/>
+            <path d="M20 20H80V80H20V20Z" fill="white"/>
+            <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
+            <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
+            <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
+            <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
+          </svg>
         </div>
-        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">E-KINERJA CPNS & PEGAWAI</h2>
-        <p class="text-xs text-red-700 font-bold uppercase tracking-widest mt-1">Komisi Pemilihan Umum Kabupaten Serdang Bedagai</p>
+        <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">E-KINERJA PNS & PEGAWAI</h2>
+        <p class="text-[11px] md:text-xs text-red-700 font-bold uppercase tracking-widest mt-0.5">Komisi Pemilihan Umum Kabupaten Serdang Bedagai</p>
       </div>
 
       <!-- Auth Tabs -->
-      <div class="flex bg-slate-100 p-1 rounded-xl mb-6 border border-slate-200/60">
+      <div class="flex bg-slate-100 p-1 rounded-xl mb-5 border border-slate-200 flex-shrink-0">
         <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 bg-white text-red-700 shadow-sm">Sign In</button>
         <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-all duration-300">Daftar Akun Baru</button>
       </div>
 
       <!-- Form Login -->
-      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
+      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4 flex-1">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase">Pilih User Cepat (Preset)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Pilih User Cepat (Preset)</label>
           <select id="loginUserPreset" onchange="applyUserPresetLogin()" class="w-full text-xs p-3 bg-slate-50 border border-slate-300 rounded-xl mb-2 focus:ring-2 focus:ring-red-600 focus:outline-none transition">
             <option value="">-- Pilih User Kantor --</option>
-            <option value="yuda">Muhammad Yuda Mashuri (CPNS)</option>
+            <option value="yuda">Muhammad Yuda Mashuri (PNS)</option>
             <option value="max">Maxdonald Octavianus S. (Kasubbag KUL)</option>
           </select>
           <input type="email" id="loginEmail" placeholder="nama@kpu.go.id" required class="w-full text-xs p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none transition">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase">Password</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Password</label>
           <input type="password" id="loginPassword" placeholder="••••••••" required class="w-full text-xs p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none transition">
         </div>
-        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 text-white font-bold rounded-xl shadow-lg shadow-red-700/30 transition-all duration-200 transform hover:-translate-y-0.5">
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 text-white font-bold rounded-xl shadow-lg shadow-red-700/30 transition-all duration-200">
           Masuk ke Aplikasi
         </button>
       </form>
 
-      <!-- Form Register (Termasuk Upload TTD) -->
-      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden">
+      <!-- Form Register (Scrollable & Responsive) -->
+      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden flex-1 pr-1">
         <div class="border-b border-slate-200 pb-1">
-          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Data Pegawai & TTD</p>
+          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Identitas PNS / Pegawai</p>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Lengkap & Gelar</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Nama Lengkap & Gelar</label>
           <input type="text" id="regNama" placeholder="MUHAMMAD YUDA MASHURI" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">NIP Pegawai</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">NIP Pegawai</label>
           <input type="text" id="regNip" placeholder="19940110 202506 1 003" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Jabatan</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Jabatan</label>
           <input type="text" id="regJabatan" placeholder="Penata Kelola Sistem dan Teknologi Informasi" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Upload Gambar TTD Pegawai (PNG Transparan)</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Upload Gambar TTD Pegawai (PNG Transparan)</label>
           <input type="file" id="regTtdPegawai" accept="image/*" onchange="previewTtdImage(this, 'previewPegawai')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
-          <img id="previewPegawai" class="h-12 mt-1 hidden object-contain">
+          <img id="previewPegawai" class="h-10 mt-1 hidden object-contain">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Email</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Email</label>
           <input type="email" id="regEmail" placeholder="yuda@kpu.go.id" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Password</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Password</label>
           <input type="password" id="regPassword" placeholder="Minimal 6 karakter" minlength="6" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
 
@@ -152,17 +160,17 @@
           <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-tie mr-1"></i> 2. Kasubbag Direct & TTD</p>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Kasubbag / Atasan</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Nama Kasubbag / Atasan</label>
           <input type="text" id="regKasubbagNama" placeholder="MAXDONALD OCTAVIANUS S." required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">NIP Kasubbag / Atasan</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">NIP Kasubbag / Atasan</label>
           <input type="text" id="regKasubbagNip" placeholder="19791004 200912 1 001" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Upload Gambar TTD Kasubbag (Opsional)</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Upload Gambar TTD Kasubbag (Opsional)</label>
           <input type="file" id="regTtdKasubbag" accept="image/*" onchange="previewTtdImage(this, 'previewKasubbag')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
-          <img id="previewKasubbag" class="h-12 mt-1 hidden object-contain">
+          <img id="previewKasubbag" class="h-10 mt-1 hidden object-contain">
         </div>
 
         <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-md transition-all mt-3">
@@ -173,17 +181,24 @@
   </div>
 
   <!-- ==================== DASHBOARD UTAMA ==================== -->
-  <div id="mainDashboard" class="hidden min-h-screen pb-12">
+  <div id="mainDashboard" class="hidden min-h-screen bg-slate-100 pb-12">
     
     <!-- Navbar Top -->
     <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-lg border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-white rounded-xl p-1 flex items-center justify-center shadow-md">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png" alt="Logo KPU" class="w-full h-full object-contain">
+          <div class="w-10 h-10 bg-red-700 text-white rounded-xl p-1 flex items-center justify-center shadow-md">
+            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" rx="15" fill="#B91C1C"/>
+              <path d="M20 20H80V80H20V20Z" fill="white"/>
+              <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
+              <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
+              <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
+              <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
+            </svg>
           </div>
           <div>
-            <h1 class="font-extrabold text-sm md:text-base leading-tight tracking-wide">E-KINERJA HARIAN CPNS</h1>
+            <h1 class="font-extrabold text-sm md:text-base leading-tight tracking-wide">E-KINERJA HARIAN PNS</h1>
             <p class="text-xs text-slate-400">Sekretariat KPU Kabupaten Serdang Bedagai</p>
           </div>
         </div>
@@ -264,16 +279,10 @@
     <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <!-- Header LKH dengan Logo KPU -->
-        <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-slate-900 print:border-black">
-          <div class="w-16 h-16 flex-shrink-0">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png" alt="Logo KPU" class="w-full h-full object-contain">
-          </div>
-          <div class="text-center flex-1 px-4">
-            <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN CPNS</h2>
-            <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-700 print:text-black">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
-          </div>
-          <div class="w-16 h-16 opacity-0"></div>
+        <!-- Header LKH (Judul Murni Tanpa Logo pada Cetak PDF) -->
+        <div class="text-center mb-6 pb-2 border-b-2 border-slate-900 print:border-black">
+          <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
+          <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
         </div>
 
         <!-- Meta Information Table -->
@@ -305,7 +314,7 @@
         <!-- Signatures Section -->
         <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
           
-          <!-- Left Signature: User/CPNS -->
+          <!-- Left Signature: User/PNS -->
           <div class="text-center w-64">
             <p>Yang membuat Laporan</p>
             <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden">
@@ -357,7 +366,6 @@
       }
     }
 
-    // Temporary Uploaded Base64 TTDs
     let tempPegawaiTtd = null;
     let tempKasubbagTtd = null;
 
