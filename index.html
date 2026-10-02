@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Firebase SDK (v9 Compact Version) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -80,7 +80,7 @@
 
   <!-- ==================== AUTH / LOGIN / REGISTER MODAL ==================== -->
   <div id="authScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto animate__animated animate__fadeIn">
-    <div class="bg-white/90 glass-effect rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 border border-white/20 my-8 animate__animated animate__zoomIn">
+    <div class="bg-white/95 glass-effect rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 border border-white/20 my-8 animate__animated animate__zoomIn">
       
       <!-- Header Login dengan Logo KPU -->
       <div class="text-center mb-6">
@@ -117,10 +117,10 @@
         </button>
       </form>
 
-      <!-- Form Register (Dinamis Pegawai & Kasubbag) -->
+      <!-- Form Register (Termasuk Upload TTD) -->
       <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden">
-        <div class="border-b border-slate-200 pb-2">
-          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Identitas Pegawai</p>
+        <div class="border-b border-slate-200 pb-1">
+          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Data Pegawai & TTD</p>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Lengkap & Gelar</label>
@@ -135,7 +135,12 @@
           <input type="text" id="regJabatan" placeholder="Penata Kelola Sistem dan Teknologi Informasi" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Email KPU / Gmail</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Upload Gambar TTD Pegawai (PNG Transparan)</label>
+          <input type="file" id="regTtdPegawai" accept="image/*" onchange="previewTtdImage(this, 'previewPegawai')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
+          <img id="previewPegawai" class="h-12 mt-1 hidden object-contain">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Email</label>
           <input type="email" id="regEmail" placeholder="yuda@kpu.go.id" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
@@ -143,8 +148,8 @@
           <input type="password" id="regPassword" placeholder="Minimal 6 karakter" minlength="6" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
 
-        <div class="border-b border-slate-200 pt-2 pb-2">
-          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-tie mr-1"></i> 2. Kasubbag / Atasan Direct</p>
+        <div class="border-b border-slate-200 pt-2 pb-1">
+          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-tie mr-1"></i> 2. Kasubbag Direct & TTD</p>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Kasubbag / Atasan</label>
@@ -153,6 +158,11 @@
         <div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1">NIP Kasubbag / Atasan</label>
           <input type="text" id="regKasubbagNip" placeholder="19791004 200912 1 001" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Upload Gambar TTD Kasubbag (Opsional)</label>
+          <input type="file" id="regTtdKasubbag" accept="image/*" onchange="previewTtdImage(this, 'previewKasubbag')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
+          <img id="previewKasubbag" class="h-12 mt-1 hidden object-contain">
         </div>
 
         <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-md transition-all mt-3">
@@ -323,7 +333,7 @@
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
-    // 1. FIREBASE CONFIGURATION (TERINTEGRASI SINKRONISASI REALTIME)
+    // 1. FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyCRPtxs3nynGMQPDOaQr4McAqqMo1b-YHQ",
       authDomain: "ekinerja-kpu-sergai.firebaseapp.com",
@@ -342,9 +352,27 @@
         firebase.initializeApp(firebaseConfig);
         dbRef = firebase.database();
         isFirebaseActive = true;
-        console.log("Connected to Firebase Realtime Database!");
       } catch (e) {
-        console.warn("Firebase error, fallback to LocalStorage:", e);
+        console.warn("Firebase fallback to LocalStorage:", e);
+      }
+    }
+
+    // Temporary Uploaded Base64 TTDs
+    let tempPegawaiTtd = null;
+    let tempKasubbagTtd = null;
+
+    function previewTtdImage(input, targetImgId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgElem = document.getElementById(targetImgId);
+          imgElem.src = e.target.result;
+          imgElem.classList.remove('hidden');
+
+          if(targetImgId === 'previewPegawai') tempPegawaiTtd = e.target.result;
+          if(targetImgId === 'previewKasubbag') tempKasubbagTtd = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
       }
     }
 
@@ -475,7 +503,9 @@
           jabatan: "Kasubbag Keuangan, Umum dan Logistik",
           kasubbagNama: "MAXDONALD OCTAVIANUS S.",
           kasubbagNip: "19791004 200912 1 001",
-          email: email
+          email: email,
+          ttdPegawai: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png",
+          ttdKasubbag: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
         };
       } else {
         currentUser = {
@@ -484,7 +514,9 @@
           jabatan: "Penata Kelola Sistem dan Teknologi Informasi",
           kasubbagNama: "MAXDONALD OCTAVIANUS S.",
           kasubbagNip: "19791004 200912 1 001",
-          email: email
+          email: email,
+          ttdPegawai: "Untitled-removebg-preview.png",
+          ttdKasubbag: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
         };
       }
 
@@ -500,7 +532,9 @@
         jabatan: document.getElementById('regJabatan').value,
         email: document.getElementById('regEmail').value,
         kasubbagNama: document.getElementById('regKasubbagNama').value || "MAXDONALD OCTAVIANUS S.",
-        kasubbagNip: document.getElementById('regKasubbagNip').value || "19791004 200912 1 001"
+        kasubbagNip: document.getElementById('regKasubbagNip').value || "19791004 200912 1 001",
+        ttdPegawai: tempPegawaiTtd || "Untitled-removebg-preview.png",
+        ttdKasubbag: tempKasubbagTtd || "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
       };
       localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
       launchDashboard();
@@ -527,6 +561,13 @@
 
       document.getElementById('signNamaKasubbag').textContent = currentUser.kasubbagNama || "MAXDONALD OCTAVIANUS S.";
       document.getElementById('signNipKasubbag').textContent = 'NIP. ' + (currentUser.kasubbagNip || "19791004 200912 1 001");
+
+      if (currentUser.ttdPegawai) {
+        document.getElementById('imgTtdYuda').src = currentUser.ttdPegawai;
+      }
+      if (currentUser.ttdKasubbag) {
+        document.getElementById('imgTtdMax').src = currentUser.ttdKasubbag;
+      }
 
       loadPeriodData();
     }
