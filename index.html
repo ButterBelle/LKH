@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Kinerja PNS & Pegawai - KPU Kabupaten Serdang Bedagai</title>
+  <title>E-KINERJA PNS - KPU KABUPATEN SERDANG BEDAGAI</title>
   
-  <!-- Favicon Logo KPU Vector Data URI -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23b91c1c' rx='20'/><path d='M30 20h40v60H30z' fill='%23ffffff'/><path d='M35 25h30v15H35z' fill='%23b91c1c'/><text x='50' y='36' font-size='10' font-weight='bold' fill='%23ffffff' text-anchor='middle'>KPU</text><path d='M35 45h30v30H35z' fill='%23f59e0b'/></svg>">
+  <!-- Favicon Logo KPU Resmi -->
+  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png">
   
   <!-- Tailwind CSS & FontAwesome & Animate.css -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -76,17 +76,10 @@
   <div id="authScreen" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
     <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/20 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn">
       
-      <!-- Header Login dengan Logo Vector KPU -->
+      <!-- Header Login dengan Logo KPU Resmi -->
       <div class="text-center mb-5 flex-shrink-0">
-        <div class="w-16 h-16 md:w-20 md:h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800">
-          <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100" height="100" rx="15" fill="#B91C1C"/>
-            <path d="M20 20H80V80H20V20Z" fill="white"/>
-            <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
-            <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
-            <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
-            <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
-          </svg>
+        <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border border-slate-200">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png" alt="Logo KPU Resmi" class="w-full h-full object-contain">
         </div>
         <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">E-KINERJA PNS & PEGAWAI</h2>
         <p class="text-[11px] md:text-xs text-red-700 font-bold uppercase tracking-widest mt-0.5">Komisi Pemilihan Umum Kabupaten Serdang Bedagai</p>
@@ -141,7 +134,7 @@
           <img id="previewPegawai" class="h-10 mt-1 hidden object-contain">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Email</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Email KPU / Gmail</label>
           <input type="email" id="regEmail" placeholder="yuda@kpu.go.id" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
         </div>
         <div>
@@ -180,15 +173,8 @@
     <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-lg border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-red-700 text-white rounded-xl p-1 flex items-center justify-center shadow-md">
-            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" rx="15" fill="#B91C1C"/>
-              <path d="M20 20H80V80H20V20Z" fill="white"/>
-              <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
-              <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
-              <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
-              <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
-            </svg>
+          <div class="w-10 h-10 bg-white rounded-xl p-1 flex items-center justify-center shadow-md">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.png" alt="Logo KPU" class="w-full h-full object-contain">
           </div>
           <div>
             <h1 class="font-extrabold text-sm md:text-base leading-tight tracking-wide">E-KINERJA HARIAN PNS</h1>
@@ -213,12 +199,12 @@
       
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
         
-        <!-- Period Selector -->
+        <!-- Period Selector (2025 - 2027) -->
         <div class="flex flex-wrap items-center gap-3">
           <div>
-            <label class="block text-[11px] font-black text-slate-500 uppercase tracking-wider">Pilih Periode LKH:</label>
+            <label class="block text-[11px] font-black text-slate-500 uppercase tracking-wider">Pilih Periode LKH (2025 - 2027):</label>
             <select id="periodSelector" onchange="changePeriod()" class="mt-1 text-xs md:text-sm font-bold p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-red-600">
-              <!-- Dynamically Populated -->
+              <!-- Dynamically Populated 2025 - 2027 -->
             </select>
           </div>
 
@@ -238,7 +224,7 @@
       <!-- Add New Activity Form -->
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
         <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-square-plus text-red-700 text-base"></i> Tambah Kegiatan ke Tabel (274 Auto-Suggest Excel Integrated)
+          <i class="fa-solid fa-square-plus text-red-700 text-base"></i> Tambah Kegiatan ke Tabel (270 Auto-Suggest Excel Integrated)
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
@@ -304,7 +290,7 @@
           </table>
         </div>
 
-        <!-- Signatures Section (TTD Normal Tanpa Rotasi) -->
+        <!-- Signatures Section -->
         <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
           
           <!-- Left Signature: User/PNS -->
@@ -377,7 +363,7 @@
       }
     }
 
-    // 2. 274 EXCEL KNOWLEDGE BASE PAIRS
+    // 2. 270 EXCEL KNOWLEDGE BASE PAIRS INTEGRATED
     const kpuKnowledgeBase = {
       "1. Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
       "Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
@@ -399,27 +385,43 @@
     let currentUser = null;
     let currentPeriodKey = "2026-10";
 
-    const periodPresets = [
-      { key: "2025-06", label: "Bulan Juni 2025", start: "2025-06-01", end: "2025-06-20", signDate: "20 Juni 2025" },
-      { key: "2025-07", label: "Bulan Juli 2025", start: "2025-06-21", end: "2025-07-20", signDate: "20 Juli 2025" },
-      { key: "2025-08", label: "Bulan 21 Juli - 20 Agustus 2025", start: "2025-07-21", end: "2025-08-20", signDate: "20 Agustus 2025" },
-      { key: "2025-09", label: "Bulan 21 Agustus - 20 September 2025", start: "2025-08-21", end: "2025-09-20", signDate: "20 September 2025" },
-      { key: "2025-10", label: "Bulan 21 September - 20 Oktober 2025", start: "2025-09-21", end: "2025-10-20", signDate: "20 Oktober 2025" },
-      { key: "2025-11", label: "Bulan 21 Oktober - 20 November 2025", start: "2025-10-21", end: "2025-11-20", signDate: "20 November 2025" },
-      { key: "2025-12", label: "Bulan 21 November - 20 Desember 2025", start: "2025-11-21", end: "2025-12-20", signDate: "20 Desember 2025" },
-      { key: "2026-01", label: "Bulan 21 Desember 2025 - 20 Januari 2026", start: "2025-12-21", end: "2026-01-20", signDate: "20 Januari 2026" },
-      { key: "2026-02", label: "Bulan 21 Januari - 20 Februari 2026", start: "2026-01-21", end: "2026-02-20", signDate: "20 Februari 2026" },
-      { key: "2026-03", label: "Bulan 21 Februari - 20 Maret 2026", start: "2026-02-21", end: "2026-03-20", signDate: "20 Maret 2026" },
-      { key: "2026-04", label: "Bulan 21 Maret - 20 April 2026", start: "2026-03-21", end: "2026-04-20", signDate: "20 April 2026" },
-      { key: "2026-05", label: "Bulan 21 April - 20 Mei 2026", start: "2026-04-21", end: "2026-05-20", signDate: "20 Mei 2026" },
-      { key: "2026-06", label: "Bulan 21 Mei - 20 Juni 2026", start: "2026-05-21", end: "2026-06-20", signDate: "20 Juni 2026" },
-      { key: "2026-07", label: "Bulan 21 Juni - 20 Juli 2026", start: "2026-06-21", end: "2026-07-20", signDate: "20 Juli 2026" },
-      { key: "2026-08", label: "Bulan 21 Juli - 20 Agustus 2026", start: "2026-07-21", end: "2026-08-20", signDate: "20 Agustus 2026" },
-      { key: "2026-09", label: "Bulan 21 Agustus - 20 September 2026", start: "2026-08-21", end: "2026-09-20", signDate: "20 September 2026" },
-      { key: "2026-10", label: "Bulan 21 September - 20 Oktober 2026", start: "2026-09-21", end: "2026-10-20", signDate: "20 Oktober 2026" },
-      { key: "2026-11", label: "Bulan 21 Oktober - 20 November 2026", start: "2026-10-21", end: "2026-11-20", signDate: "20 November 2026" },
-      { key: "2026-12", label: "Bulan 21 November - 20 Desember 2026", start: "2026-11-21", end: "2026-12-20", signDate: "20 Desember 2026" }
-    ];
+    // GENERATE ALL PERIOD PRESETS FROM 2025 TO 2027
+    const periodPresets = [];
+    const monthsName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    for (let y = 2025; y <= 2027; y++) {
+      let startM = (y === 2025) ? 6 : 1;
+      for (let m = startM; m <= 12; m++) {
+        let key = `${y}-${m < 10 ? '0' + m : m}`;
+        let label = "";
+        let startDate = "";
+        
+        if (y === 2025 && m === 6) {
+          label = "Bulan Juni 2025";
+          startDate = "2025-06-01";
+        } else if (y === 2025 && m === 7) {
+          label = "Bulan Juli 2025";
+          startDate = "2025-06-21";
+        } else if (m === 1) {
+          label = `Bulan 21 Desember ${y-1} - 20 Januari ${y}`;
+          startDate = `${y-1}-12-21`;
+        } else {
+          label = `Bulan 21 ${monthsName[m-2]} - 20 ${monthsName[m-1]} ${y}`;
+          startDate = `${y}-${(m-1) < 10 ? '0' + (m-1) : (m-1)}-21`;
+        }
+
+        let endDate = `${y}-${m < 10 ? '0' + m : m}-20`;
+        let signDate = `20 ${monthsName[m-1]} ${y}`;
+
+        periodPresets.push({
+          key: key,
+          label: label,
+          start: startDate,
+          end: endDate,
+          signDate: signDate
+        });
+      }
+    }
 
     window.onload = function() {
       populatePeriodSelector();
@@ -497,7 +499,9 @@
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       
+      let userKey = "199401102025061003";
       if(email.includes('max')) {
+        userKey = "197910042009121001";
         currentUser = {
           nama: "MAXDONALD OCTAVIANUS S.",
           nip: "19791004 200912 1 001",
@@ -517,15 +521,33 @@
         };
       }
 
-      localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
-      launchDashboard();
+      // Check user profile from Firebase
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
+          if (snap.exists()) {
+            const fbUser = snap.val();
+            currentUser = { ...currentUser, ...fbUser };
+          }
+          localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+          launchDashboard();
+        }).catch(() => {
+          localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+          launchDashboard();
+        });
+      } else {
+        localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+        launchDashboard();
+      }
     }
 
     function handleRegister(e) {
       e.preventDefault();
+      const nipVal = document.getElementById('regNip').value;
+      const userKey = nipVal.replace(/\s+/g, '');
+
       currentUser = {
         nama: document.getElementById('regNama').value,
-        nip: document.getElementById('regNip').value,
+        nip: nipVal,
         jabatan: document.getElementById('regJabatan').value,
         email: document.getElementById('regEmail').value,
         kasubbagNama: document.getElementById('regKasubbagNama').value || "MAXDONALD OCTAVIANUS S.",
@@ -533,7 +555,14 @@
         ttdPegawai: tempPegawaiTtd || "",
         ttdKasubbag: tempKasubbagTtd || ""
       };
+
       localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+
+      // Save user profile & signatures to Firebase
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).set(currentUser);
+      }
+
       launchDashboard();
     }
 
