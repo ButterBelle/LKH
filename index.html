@@ -22,6 +22,41 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
+    /* Background Modern untuk Halaman Login */
+    .cool-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 35%, #831843 70%, #991b1b 100%);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Abstract Glow Orbs */
+    .glow-orb-1 {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      top: -50px;
+      left: -50px;
+      background: radial-gradient(circle, rgba(239,68,68,0.3) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(50px);
+    }
+    .glow-orb-2 {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      bottom: -100px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(60px);
+    }
+
     @page {
       size: A4 portrait;
       margin: 8mm;
@@ -64,20 +99,23 @@
     .border-excel th, .border-excel td { border: 1px solid #000; padding: 5px 6px; vertical-align: top; }
     
     .glass-effect {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
     }
   </style>
 </head>
 <body class="bg-slate-900 min-h-screen text-slate-800 antialiased selection:bg-red-500 selection:text-white">
 
   <!-- ==================== AUTH / LOGIN / REGISTER MODAL ==================== -->
-  <div id="authScreen" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
-    <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/20 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn">
+  <div id="authScreen" class="cool-bg fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+
+    <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/40 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn relative z-10">
       
-      <!-- Header Login dengan Logo Vector KPU Resmi (Embedded SVG - Anti Pecah) -->
+      <!-- Header Login dengan Logo Vector KPU Resmi -->
       <div class="text-center mb-5 flex-shrink-0">
-        <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800">
+        <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800 ring-4 ring-red-500/20">
           <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="100" height="100" rx="15" fill="#B91C1C"/>
             <path d="M20 20H80V80H20V20Z" fill="white"/>
@@ -537,7 +575,6 @@
       localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
       launchDashboard();
 
-      // Async fetch profile from Firebase
       if (isFirebaseActive && dbRef) {
         dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
           if (snap.exists()) {
