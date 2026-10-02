@@ -111,7 +111,7 @@
 
     <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/40 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn relative z-10">
       
-      <!-- Header Login dengan Logo Vector KPU -->
+      <!-- Header Login -->
       <div class="text-center mb-5 flex-shrink-0">
         <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800 ring-4 ring-red-500/20">
           <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -669,7 +669,7 @@
       return result;
     }
 
-    // RENDER TABEL: TANGGAL DAN NOMOR DUGABUNG/DIMERGE BERSAMAAN
+    // FUNGSI RENDER TABEL PERBAIKAN: MERGE TANGGAL DAN NOMOR (NO) BERSAMAAN
     function renderTable(data) {
       const tbody = document.getElementById('lkhTableBody');
       tbody.innerHTML = '';
@@ -684,7 +684,7 @@
       });
 
       const dateTracker = {};
-      let serialNumber = 1;
+      let currentNumber = 1;
 
       data.forEach((item, index) => {
         const dateKey = item.waktu.trim();
@@ -704,7 +704,7 @@
         let dateAndNoCellHtml = '';
         if (currentIdx === 1) {
           dateAndNoCellHtml = `
-            <td rowspan="${count}" class="text-center font-bold align-middle border-excel">${serialNumber++}</td>
+            <td rowspan="${count}" class="text-center font-bold align-middle border-excel">${currentNumber++}</td>
             <td rowspan="${count}" class="font-semibold bg-white border-excel align-middle">${item.waktu}</td>
           `;
         }
