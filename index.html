@@ -276,45 +276,15 @@
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-        <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-square-plus text-red-700 text-base"></i> Tambah / Sisip Kegiatan Baru
-        </h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-          <div class="md:col-span-3">
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">Tanggal Kegiatan</label>
-            <input type="date" id="inputTanggal" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600">
-          </div>
-
-          <div class="md:col-span-4">
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">Uraian Kinerja (Auto-Suggest)</label>
-            <input type="text" id="inputUraian" list="listUraian" oninput="handleUraianInput()" placeholder="Ketik kata kunci (Srikandi, Coktas...)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600">
-            <datalist id="listUraian"></datalist>
-          </div>
-
-          <div class="md:col-span-3">
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">Output/Hasil (Otomatis)</label>
-            <input type="text" id="inputOutput" list="listOutput" placeholder="Hasil kinerja..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600">
-            <datalist id="listOutput"></datalist>
-          </div>
-
-          <div class="md:col-span-2 flex items-end">
-            <button onclick="addNewEntryFromForm()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center justify-center gap-1">
-              <i class="fa-solid fa-plus"></i> Sisip Baris
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- ==================== EXCEL TABLE REPORT SHEET (PRINT AREA) ==================== -->
     <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <!-- Header LKH dengan SVG Logo KPU 100% Selalu Tampil -->
+        <!-- Header LKH dengan Logo KPU Vektor Murni -->
         <div class="flex items-center justify-center gap-4 mb-6 pb-3 border-b-2 border-slate-900 print:border-black">
-          <div class="w-14 h-14 flex-shrink-0">
+          <div class="w-16 h-16 flex-shrink-0">
             <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="100" height="100" rx="15" fill="#B91C1C"/>
               <path d="M20 20H80V80H20V20Z" fill="white"/>
@@ -346,7 +316,7 @@
                 <th class="py-2">URAIAN KINERJA</th>
                 <th class="w-56 py-2">OUTPUT/HASIL KINERJA</th>
                 <th class="w-24 py-2">KETERANGAN</th>
-                <th class="w-16 no-print">AKSI</th>
+                <th class="w-20 no-print">AKSI</th>
               </tr>
             </thead>
             <tbody id="lkhTableBody">
@@ -354,11 +324,11 @@
           </table>
         </div>
 
-        <!-- TTD Area Normal & Auto Render dari Firebase Base64 -->
+        <!-- TTD Area -->
         <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
           <div class="text-center w-64">
             <p>Yang membuat Laporan</p>
-            <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden border border-dashed border-slate-200 print:border-none rounded">
+            <div class="h-28 flex items-center justify-center my-1 relative border border-dashed border-slate-200 print:border-none rounded">
               <img id="imgTtdYuda" src="" alt="TTD Pegawai" class="max-h-24 object-contain">
             </div>
             <p id="signNamaYuda" class="font-bold underline uppercase">MUHAMMAD YUDA MASHURI</p>
@@ -422,7 +392,6 @@
       }
     }
 
-    // FUNGSI UPLOAD TTD & OTOMATIS SIMPAN KE FIREBASE SEBAGAI BASE64
     function uploadDirectTTD(input, targetType) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -445,7 +414,7 @@
             updateObj[targetType] = base64Img;
             dbRef.ref(`users/${userKey}`).update(updateObj);
           }
-          alert("Tanda tangan berhasil diunggah dan tersimpan ke Firebase!");
+          alert("Tanda tangan berhasil disimpan ke Firebase!");
         };
         reader.readAsDataURL(input.files[0]);
       }
@@ -510,7 +479,6 @@
 
     window.onload = function() {
       populatePeriodSelector();
-      populateDatalists();
       
       const savedUser = localStorage.getItem('lkh_session_user');
       if (savedUser) {
@@ -529,30 +497,6 @@
         if(p.key === currentPeriodKey) opt.selected = true;
         select.appendChild(opt);
       });
-    }
-
-    function populateDatalists() {
-      const listUraian = document.getElementById('listUraian');
-      const listOutput = document.getElementById('listOutput');
-      listUraian.innerHTML = '';
-      listOutput.innerHTML = '';
-
-      Object.keys(kpuKnowledgeBase).forEach(uraian => {
-        const opt1 = document.createElement('option');
-        opt1.value = uraian;
-        listUraian.appendChild(opt1);
-
-        const opt2 = document.createElement('option');
-        opt2.value = kpuKnowledgeBase[uraian];
-        listOutput.appendChild(opt2);
-      });
-    }
-
-    function handleUraianInput() {
-      const val = document.getElementById('inputUraian').value;
-      if (kpuKnowledgeBase[val]) {
-        document.getElementById('inputOutput').value = kpuKnowledgeBase[val];
-      }
     }
 
     function switchAuthTab(tab) {
@@ -674,6 +618,25 @@
         document.getElementById('imgTtdMax').src = currentUser.ttdKasubbag;
       }
 
+      // SelaluSync TTD dari Firebase saat masuk ke Dashboard
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
+          if (snap.exists()) {
+            const data = snap.val();
+            if (data.ttdPegawai) {
+              currentUser.ttdPegawai = data.ttdPegawai;
+              document.getElementById('imgTtdYuda').src = data.ttdPegawai;
+            }
+            if (data.ttdKasubbag) {
+              currentUser.ttdKasubbag = data.ttdKasubbag;
+              document.getElementById('imgTtdMax').src = data.ttdKasubbag;
+            }
+            localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+          }
+        });
+      }
+
       loadPeriodData();
     }
 
@@ -735,6 +698,7 @@
       return result;
     }
 
+    // FUNGSI RENDER TABEL: MERGED ROWSPAN TANGGAL & AKSI PLUS + HAPUS SEJAJAR
     function renderTable(data) {
       const tbody = document.getElementById('lkhTableBody');
       tbody.innerHTML = '';
@@ -784,11 +748,11 @@
             <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-xs">${item.keterangan || 'Selesai'}</span>
           </td>
           <td class="text-center no-print align-middle">
-            <div class="flex items-center justify-center gap-1">
-              <button onclick="insertRowBelow(${index})" title="Tambah Baris Dibawah" class="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded p-1 transition">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="insertRowBelow(${index})" title="Sisip Baris Dibawah" class="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 rounded p-1 transition">
                 <i class="fa-solid fa-plus text-xs"></i>
               </button>
-              <button onclick="deleteRow(${index})" title="Hapus Baris" class="text-slate-400 hover:text-red-600 hover:bg-red-50 rounded p-1 transition">
+              <button onclick="deleteRow(${index})" title="Hapus Baris" class="text-slate-400 hover:text-red-600 hover:bg-red-100 rounded p-1 transition">
                 <i class="fa-solid fa-trash-can text-xs"></i>
               </button>
             </div>
@@ -808,11 +772,6 @@
           value = value.replace(/^\d+\.\s*/, '').trim();
         }
         rowsData[index][field] = value;
-
-        if (rowsData[index].uraian && rowsData[index].output) {
-          kpuKnowledgeBase[rowsData[index].uraian] = rowsData[index].output;
-          populateDatalists();
-        }
 
         localStorage.setItem(storageKey, JSON.stringify(rowsData));
 
@@ -847,66 +806,6 @@
       }
 
       renderTable(rowsData);
-    }
-
-    function addNewEntryFromForm() {
-      const dateVal = document.getElementById('inputTanggal').value;
-      const uraianVal = document.getElementById('inputUraian').value;
-      const outputVal = document.getElementById('inputOutput').value;
-
-      if (!uraianVal) {
-        alert("Harap isi Uraian Kinerja!");
-        return;
-      }
-
-      const userKey = currentUser.nip.replace(/\s+/g, '');
-      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
-      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-      let dateFormatted = "";
-      if (dateVal) {
-        const d = new Date(dateVal);
-        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        dateFormatted = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-      }
-
-      let insertIndex = -1;
-
-      if (dateFormatted !== "") {
-        for (let i = rowsData.length - 1; i >= 0; i--) {
-          if (rowsData[i].waktu.toLowerCase().includes(dateFormatted.toLowerCase())) {
-            insertIndex = i + 1;
-            break;
-          }
-        }
-      }
-
-      const newItem = {
-        no: 0,
-        waktu: dateFormatted || "Hari Kerja",
-        uraian: uraianVal.replace(/^\d+\.\s*/, '').trim(),
-        output: outputVal || kpuKnowledgeBase[uraianVal] || "Selesai dilaksanakan",
-        keterangan: "Selesai"
-      };
-
-      if (insertIndex !== -1 && insertIndex <= rowsData.length) {
-        rowsData.splice(insertIndex, 0, newItem);
-      } else {
-        rowsData.push(newItem);
-      }
-
-      rowsData.forEach((item, idx) => item.no = idx + 1);
-
-      localStorage.setItem(storageKey, JSON.stringify(rowsData));
-      if (isFirebaseActive && dbRef) {
-        dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
-      }
-
-      renderTable(rowsData);
-
-      document.getElementById('inputUraian').value = '';
-      document.getElementById('inputOutput').value = '';
     }
 
     function deleteRow(index) {
