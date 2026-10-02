@@ -94,7 +94,7 @@
     }
 
     .border-excel { border: 1.5px solid #000; }
-    .border-excel th, .border-excel td { border: 1px solid #000; padding: 5px 6px; vertical-align: top; }
+    .border-excel th, .border-excel td { border: 1px solid #000; padding: 5px 6px; vertical-align: middle; }
     
     .glass-effect {
       background: rgba(255, 255, 255, 0.95);
@@ -111,6 +111,7 @@
 
     <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/40 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn relative z-10">
       
+      <!-- Header Login dengan Logo Vector KPU Resmi -->
       <div class="text-center mb-5 flex-shrink-0">
         <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800 ring-4 ring-red-500/20">
           <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,11 +127,13 @@
         <p class="text-[11px] md:text-xs text-red-700 font-bold uppercase tracking-widest mt-0.5">Komisi Pemilihan Umum Kabupaten Serdang Bedagai</p>
       </div>
 
+      <!-- Auth Tabs -->
       <div class="flex bg-slate-100 p-1 rounded-xl mb-5 border border-slate-200 flex-shrink-0">
         <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 bg-white text-red-700 shadow-sm">Sign In</button>
         <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-all duration-300">Daftar Akun Baru</button>
       </div>
 
+      <!-- Form Login -->
       <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4 flex-1">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Pilih User Cepat (Preset)</label>
@@ -150,6 +153,7 @@
         </button>
       </form>
 
+      <!-- Form Register -->
       <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden flex-1 pr-1">
         <div class="border-b border-slate-200 pb-1">
           <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Identitas PNS / Pegawai</p>
@@ -254,8 +258,19 @@
           </button>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button onclick="window.print()" class="px-4 py-2.5 bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded-xl shadow-lg shadow-red-700/20 transition flex items-center gap-2">
+        <div class="flex items-center gap-3">
+          <!-- Tombol Direct Upload TTD Pegawai & Kasubbag -->
+          <label title="Upload TTD Pegawai ke Firebase" class="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-signature text-red-600"></i> Upload TTD Saya
+            <input type="file" accept="image/*" onchange="uploadDirectTTD(this, 'ttdPegawai')" class="hidden">
+          </label>
+
+          <label title="Upload TTD Kasubbag ke Firebase" class="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-user-tie text-amber-600"></i> Upload TTD Kasubbag
+            <input type="file" accept="image/*" onchange="uploadDirectTTD(this, 'ttdKasubbag')" class="hidden">
+          </label>
+
+          <button onclick="window.print()" class="px-4 py-2 bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded-xl shadow-lg shadow-red-700/20 transition flex items-center gap-2">
             <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
           </button>
         </div>
@@ -263,7 +278,7 @@
 
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
         <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-square-plus text-red-700 text-base"></i> Sisip Kegiatan ke Tanggal Tertentu (Auto-Positioning)
+          <i class="fa-solid fa-square-plus text-red-700 text-base"></i> Tambah / Sisip Kegiatan Baru
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
@@ -297,9 +312,22 @@
     <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <div class="text-center mb-6 pb-2 border-b-2 border-slate-900 print:border-black">
-          <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
-          <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
+        <!-- Header LKH dengan SVG Logo KPU 100% Selalu Tampil -->
+        <div class="flex items-center justify-center gap-4 mb-6 pb-3 border-b-2 border-slate-900 print:border-black">
+          <div class="w-14 h-14 flex-shrink-0">
+            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" rx="15" fill="#B91C1C"/>
+              <path d="M20 20H80V80H20V20Z" fill="white"/>
+              <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
+              <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
+              <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
+              <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
+            </svg>
+          </div>
+          <div class="text-center">
+            <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
+            <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
+          </div>
         </div>
 
         <div class="mb-6 text-xs md:text-sm font-semibold space-y-1.5 max-w-xl">
@@ -318,7 +346,7 @@
                 <th class="py-2">URAIAN KINERJA</th>
                 <th class="w-56 py-2">OUTPUT/HASIL KINERJA</th>
                 <th class="w-24 py-2">KETERANGAN</th>
-                <th class="w-8 no-print"></th>
+                <th class="w-16 no-print">AKSI</th>
               </tr>
             </thead>
             <tbody id="lkhTableBody">
@@ -326,10 +354,11 @@
           </table>
         </div>
 
+        <!-- TTD Area Normal & Auto Render dari Firebase Base64 -->
         <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
           <div class="text-center w-64">
             <p>Yang membuat Laporan</p>
-            <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden">
+            <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden border border-dashed border-slate-200 print:border-none rounded">
               <img id="imgTtdYuda" src="" alt="TTD Pegawai" class="max-h-24 object-contain">
             </div>
             <p id="signNamaYuda" class="font-bold underline uppercase">MUHAMMAD YUDA MASHURI</p>
@@ -339,7 +368,7 @@
           <div class="text-center w-64">
             <p id="signKotaTanggal">Sei Rampah, 20 Oktober 2026</p>
             <p>Kasubbag Keuangan, Umum dan Logistik</p>
-            <div class="h-28 flex items-center justify-center my-1 relative">
+            <div class="h-28 flex items-center justify-center my-1 relative border border-dashed border-slate-200 print:border-none rounded">
               <img id="imgTtdMax" src="" alt="TTD Kasubbag" class="max-h-24 object-contain">
             </div>
             <p id="signNamaKasubbag" class="font-bold underline uppercase">MAXDONALD OCTAVIANUS S.</p>
@@ -393,8 +422,36 @@
       }
     }
 
+    // FUNGSI UPLOAD TTD & OTOMATIS SIMPAN KE FIREBASE SEBAGAI BASE64
+    function uploadDirectTTD(input, targetType) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Img = e.target.result;
+          const userKey = currentUser.nip.replace(/\s+/g, '');
+
+          if (targetType === 'ttdPegawai') {
+            currentUser.ttdPegawai = base64Img;
+            document.getElementById('imgTtdYuda').src = base64Img;
+          } else if (targetType === 'ttdKasubbag') {
+            currentUser.ttdKasubbag = base64Img;
+            document.getElementById('imgTtdMax').src = base64Img;
+          }
+
+          localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+
+          if (isFirebaseActive && dbRef) {
+            const updateObj = {};
+            updateObj[targetType] = base64Img;
+            dbRef.ref(`users/${userKey}`).update(updateObj);
+          }
+          alert("Tanda tangan berhasil diunggah dan tersimpan ke Firebase!");
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
     const kpuKnowledgeBase = {
-      "1. Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
       "Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
       "Menginput Data Administrasi Digital Surat Masuk Ketua KPU Kab.Serdang Bedagai ke dalam Aplikasi Srikandi.": "Terlaksananya Dokumen Administrasi Digital Surat Masuk dalam Aplikasi Srikandi",
       "Membuat Laporan SPPD, ST Kegiatan COKTAS PPDB, Mengikuti KEGIATAN PENCOCOKAN PENELITIAN TERBATAS (COKTAS) PADA PEMUTAKHIRAN DATA PEMILIH BERKELANJUTAN (PDPB) TAHUN 2026": "Tersedianya Laporan Mengikuti Kegiatan Coktas",
@@ -668,7 +725,7 @@
           result.push({
             no: itemNo++,
             waktu: dateFormatted,
-            uraian: isSenin ? "1. Apel Pagi Senin Rutin." : "",
+            uraian: isSenin ? "Apel Pagi Senin Rutin." : "",
             output: isSenin ? "Terlaksananya Apel Pagi Senin secara tertib dan lancar" : "",
             keterangan: "Selesai"
           });
@@ -682,28 +739,59 @@
       const tbody = document.getElementById('lkhTableBody');
       tbody.innerHTML = '';
 
-      // Re-index number NO
+      const dateCounts = {};
+      data.forEach(item => {
+        const dateKey = item.waktu.trim();
+        dateCounts[dateKey] = (dateCounts[dateKey] || 0) + 1;
+        if (item.uraian) {
+          item.uraian = item.uraian.replace(/^\d+\.\s*/, '').trim();
+        }
+      });
+
+      const dateTracker = {};
+
       data.forEach((item, index) => {
         item.no = index + 1;
+        const dateKey = item.waktu.trim();
+        dateTracker[dateKey] = (dateTracker[dateKey] || 0) + 1;
+        
+        const count = dateCounts[dateKey];
+        const currentIdx = dateTracker[dateKey];
+
+        let formattedUraian = item.uraian || '';
+        if (count > 1 && formattedUraian !== '') {
+          formattedUraian = `${currentIdx}. ${formattedUraian}`;
+        }
+
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50";
 
+        let dateCellHtml = '';
+        if (currentIdx === 1) {
+          dateCellHtml = `<td rowspan="${count}" class="font-semibold bg-white border-excel align-middle">${item.waktu}</td>`;
+        }
+
         tr.innerHTML = `
-          <td class="text-center font-bold">${item.no}</td>
-          <td class="font-semibold">${item.waktu}</td>
+          <td class="text-center font-bold align-middle">${item.no}</td>
+          ${dateCellHtml}
           <td>
-            <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.uraian || ''}</textarea>
+            <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${formattedUraian}</textarea>
           </td>
           <td>
             <textarea onchange="updateCell(${index}, 'output', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.output || ''}</textarea>
           </td>
-          <td class="text-center">
+          <td class="text-center align-middle">
             <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-xs">${item.keterangan || 'Selesai'}</span>
           </td>
-          <td class="text-center no-print">
-            <button onclick="deleteRow(${index})" title="Hapus Baris" class="text-slate-400 hover:text-red-600 transition px-1">
-              <i class="fa-solid fa-trash-can text-xs"></i>
-            </button>
+          <td class="text-center no-print align-middle">
+            <div class="flex items-center justify-center gap-1">
+              <button onclick="insertRowBelow(${index})" title="Tambah Baris Dibawah" class="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded p-1 transition">
+                <i class="fa-solid fa-plus text-xs"></i>
+              </button>
+              <button onclick="deleteRow(${index})" title="Hapus Baris" class="text-slate-400 hover:text-red-600 hover:bg-red-50 rounded p-1 transition">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
           </td>
         `;
         tbody.appendChild(tr);
@@ -716,6 +804,9 @@
       let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
 
       if (rowsData[index]) {
+        if (field === 'uraian') {
+          value = value.replace(/^\d+\.\s*/, '').trim();
+        }
         rowsData[index][field] = value;
 
         if (rowsData[index].uraian && rowsData[index].output) {
@@ -728,10 +819,36 @@
         if (isFirebaseActive && dbRef) {
           dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
         }
+
+        renderTable(rowsData);
       }
     }
 
-    // FUNGSI PENYISIPAN BARIS DI BAWAH TANGGAL YANG DIPILIH
+    function insertRowBelow(index) {
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      const targetDate = rowsData[index].waktu;
+      const newItem = {
+        no: 0,
+        waktu: targetDate,
+        uraian: "",
+        output: "",
+        keterangan: "Selesai"
+      };
+
+      rowsData.splice(index + 1, 0, newItem);
+      rowsData.forEach((item, idx) => item.no = idx + 1);
+
+      localStorage.setItem(storageKey, JSON.stringify(rowsData));
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
+      }
+
+      renderTable(rowsData);
+    }
+
     function addNewEntryFromForm() {
       const dateVal = document.getElementById('inputTanggal').value;
       const uraianVal = document.getElementById('inputUraian').value;
@@ -757,7 +874,6 @@
       let insertIndex = -1;
 
       if (dateFormatted !== "") {
-        // Cari indeks baris terakhir yang memiliki tanggal yang sama
         for (let i = rowsData.length - 1; i >= 0; i--) {
           if (rowsData[i].waktu.toLowerCase().includes(dateFormatted.toLowerCase())) {
             insertIndex = i + 1;
@@ -769,20 +885,17 @@
       const newItem = {
         no: 0,
         waktu: dateFormatted || "Hari Kerja",
-        uraian: uraianVal,
+        uraian: uraianVal.replace(/^\d+\.\s*/, '').trim(),
         output: outputVal || kpuKnowledgeBase[uraianVal] || "Selesai dilaksanakan",
         keterangan: "Selesai"
       };
 
       if (insertIndex !== -1 && insertIndex <= rowsData.length) {
-        // Sisip tepat di bawah tanggal yang ditemukan
         rowsData.splice(insertIndex, 0, newItem);
       } else {
-        // Jika tanggal tidak ketemu di tabel, tambahkan di paling bawah
         rowsData.push(newItem);
       }
 
-      // Re-index urutan nomor
       rowsData.forEach((item, idx) => item.no = idx + 1);
 
       localStorage.setItem(storageKey, JSON.stringify(rowsData));
