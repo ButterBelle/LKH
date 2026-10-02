@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-KINERJA PNS - KPU KABUPATEN SERDANG BEDAGAI</title>
+  
+  <!-- Favicon Logo KPU Vector Data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23b91c1c' rx='20'/><path d='M30 20h40v60H30z' fill='%23ffffff'/><path d='M35 25h30v15H35z' fill='%23b91c1c'/><text x='50' y='36' font-size='10' font-weight='bold' fill='%23ffffff' text-anchor='middle'>KPU</text><path d='M35 45h30v30H35z' fill='%23f59e0b'/></svg>">
+  
+  <!-- Tailwind CSS & FontAwesome & Animate.css -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .cool-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 35%, #831843 70%, #991b1b 100%);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glow-orb-1 {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      top: -50px;
+      left: -50px;
+      background: radial-gradient(circle, rgba(239,68,68,0.3) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(50px);
+    }
+    .glow-orb-2 {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      bottom: -100px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(60px);
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 8mm;
+    }
+
+    @media print {
+      html, body {
+        background: white !important;
+        color: black !important;
+        font-size: 10pt;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .no-print, .no-print * {
+        display: none !important;
+      }
+
+      .print-only {
+        display: block !important;
+      }
+
+      .border-excel {
+        border: 1.5px solid #000 !important;
+      }
+
+      .border-excel th, .border-excel td {
+        border: 1px solid #000 !important;
+      }
+
+      textarea {
+        border: none !important;
+        resize: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+      }
+    }
+
+    .border-excel { border: 1.5px solid #000; }
+    .border-excel th, .border-excel td { border: 1px solid #000; padding: 5px 6px; vertical-align: middle; }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 min-h-screen text-slate-800 antialiased selection:bg-red-500 selection:text-white">
+
+  <!-- ==================== AUTH / LOGIN / REGISTER MODAL ==================== -->
+  <div id="authScreen" class="cool-bg fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+
+    <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/40 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn relative z-10">
+      
+      <!-- Header Login -->
+      <div class="text-center mb-5 flex-shrink-0">
+        <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800 ring-4 ring-red-500/20">
+          <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="15" fill="#B91C1C"/>
+            <path d="M20 20H80V80H20V20Z" fill="white"/>
+            <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
+            <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
+            <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
+            <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
+          </svg>
+        </div>
+        <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">E-KINERJA PNS & PEGAWAI</h2>
+        <p class="text-[11px] md:text-xs text-red-700 font-bold uppercase tracking-widest mt-0.5">Komisi Pemilihan Umum Kabupaten Serdang Bedagai</p>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="flex bg-slate-100 p-1 rounded-xl mb-5 border border-slate-200 flex-shrink-0">
+        <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 bg-white text-red-700 shadow-sm">Sign In</button>
+        <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-all duration-300">Daftar Akun Baru</button>
+      </div>
+
+      <!-- Form Login -->
+      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4 flex-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Pilih User Cepat (Preset)</label>
+          <select id="loginUserPreset" onchange="applyUserPresetLogin()" class="w-full text-xs p-3 bg-slate-50 border border-slate-300 rounded-xl mb-2 focus:ring-2 focus:ring-red-600 focus:outline-none transition">
+            <option value="">-- Pilih User Kantor --</option>
+            <option value="yuda">Muhammad Yuda Mashuri (PNS)</option>
+            <option value="max">Maxdonald Octavianus S. (Kasubbag KUL)</option>
+          </select>
+          <input type="email" id="loginEmail" placeholder="nama@kpu.go.id" required class="w-full text-xs p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required class="w-full text-xs p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none transition">
+        </div>
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 text-white font-bold rounded-xl shadow-lg shadow-red-700/30 transition-all duration-200">
+          Masuk ke Aplikasi
+        </button>
+      </form>
+
+      <!-- Form Register -->
+      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden flex-1 pr-1">
+        <div class="border-b border-slate-200 pb-1">
+          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-gear mr-1"></i> 1. Identitas PNS / Pegawai</p>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Nama Lengkap & Gelar</label>
+          <input type="text" id="regNama" placeholder="MUHAMMAD YUDA MASHURI" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">NIP Pegawai</label>
+          <input type="text" id="regNip" placeholder="19940110 202506 1 003" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Jabatan</label>
+          <input type="text" id="regJabatan" placeholder="Penata Kelola Sistem dan Teknologi Informasi" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Upload TTD Pegawai (PNG Transparan)</label>
+          <input type="file" id="regTtdPegawai" accept="image/*" onchange="previewTtdImage(this, 'previewPegawai')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
+          <img id="previewPegawai" class="h-10 mt-1 hidden object-contain">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Email KPU / Gmail</label>
+          <input type="email" id="regEmail" placeholder="yuda@kpu.go.id" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Password</label>
+          <input type="password" id="regPassword" placeholder="Minimal 6 karakter" minlength="6" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+
+        <div class="border-b border-slate-200 pt-2 pb-1">
+          <p class="text-xs font-black text-red-700 uppercase tracking-wider"><i class="fa-solid fa-user-tie mr-1"></i> 2. Kasubbag Direct & TTD</p>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Nama Kasubbag / Atasan</label>
+          <input type="text" id="regKasubbagNama" placeholder="MAXDONALD OCTAVIANUS S." required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">NIP Kasubbag / Atasan</label>
+          <input type="text" id="regKasubbagNip" placeholder="19791004 200912 1 001" required class="w-full text-xs p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Upload TTD Kasubbag (Opsional)</label>
+          <input type="file" id="regTtdKasubbag" accept="image/*" onchange="previewTtdImage(this, 'previewKasubbag')" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg bg-slate-50">
+          <img id="previewKasubbag" class="h-10 mt-1 hidden object-contain">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-md transition-all mt-3">
+          Daftarkan Akun
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD UTAMA ==================== -->
+  <div id="mainDashboard" class="hidden min-h-screen bg-slate-100 pb-12">
+    
+    <!-- Navbar Top -->
+    <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-lg border-b border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-red-700 text-white rounded-xl p-1 flex items-center justify-center shadow-md border border-red-800">
+            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" rx="15" fill="#B91C1C"/>
+              <path d="M20 20H80V80H20V20Z" fill="white"/>
+              <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
+              <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
+              <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
+              <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-sm md:text-base leading-tight tracking-wide">E-KINERJA HARIAN PNS</h1>
+            <p class="text-xs text-slate-400">Sekretariat KPU Kabupaten Serdang Bedagai</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="text-right hidden sm:block">
+            <div id="navUserName" class="font-bold text-sm text-amber-400">Muhammad Yuda Mashuri</div>
+            <div id="navUserNip" class="text-xs text-slate-400">NIP. 19940110 202506 1 003</div>
+          </div>
+          <button onclick="handleLogout()" class="px-3.5 py-2 bg-slate-800 hover:bg-red-700 text-xs font-bold rounded-xl transition border border-slate-700 shadow-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-right-from-bracket"></i> Keluar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 mt-6 no-print space-y-6">
+      
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <label class="block text-[11px] font-black text-slate-500 uppercase tracking-wider">Pilih Periode LKH (2025 - 2027):</label>
+            <select id="periodSelector" onchange="changePeriod()" class="mt-1 text-xs md:text-sm font-bold p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-red-600">
+            </select>
+          </div>
+
+          <button onclick="generateWorkingDays()" class="mt-5 px-4 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Generate Hari Kerja (Sen-Jum)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <label title="Upload TTD Pegawai ke Firebase" class="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-signature text-red-600"></i> Upload TTD Saya
+            <input type="file" accept="image/*" onchange="uploadDirectTTD(this, 'ttdPegawai')" class="hidden">
+          </label>
+
+          <label title="Upload TTD Kasubbag ke Firebase" class="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-user-tie text-amber-600"></i> Upload TTD Kasubbag
+            <input type="file" accept="image/*" onchange="uploadDirectTTD(this, 'ttdKasubbag')" class="hidden">
+          </label>
+
+          <button onclick="window.print()" class="px-4 py-2 bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded-xl shadow-lg shadow-red-700/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== EXCEL TABLE REPORT SHEET (PRINT AREA) ==================== -->
+    <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
+      <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
+        
+        <!-- Header LKH -->
+        <div class="text-center mb-6 pb-2 border-b-2 border-slate-900 print:border-black">
+          <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
+          <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
+        </div>
+
+        <div class="mb-6 text-xs md:text-sm font-semibold space-y-1.5 max-w-xl">
+          <div class="flex"><span class="w-28 uppercase">NAMA</span><span class="mr-2">:</span><span id="docNama" class="font-bold">MUHAMMAD YUDA MASHURI</span></div>
+          <div class="flex"><span class="w-28 uppercase">NIP</span><span class="mr-2">:</span><span id="docNip">19940110 202506 1 003</span></div>
+          <div class="flex"><span class="w-28 uppercase">JABATAN</span><span class="mr-2">:</span><span id="docJabatan">Penata Kelola Sistem dan Teknologi Informasi</span></div>
+          <div class="flex"><span class="w-28 uppercase">PERIODE</span><span class="mr-2">:</span><span id="docPeriode" class="font-bold">Bulan 21 September - 20 Oktober Tahun 2026</span></div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-excel text-xs md:text-sm border-collapse">
+            <thead>
+              <tr class="bg-slate-100 font-bold text-center uppercase border-b-2 border-black">
+                <th class="w-10 py-2">NO</th>
+                <th class="w-44 py-2">WAKTU PELAKSANAAN</th>
+                <th class="py-2">URAIAN KINERJA</th>
+                <th class="w-56 py-2">OUTPUT/HASIL KINERJA</th>
+                <th class="w-24 py-2">KETERANGAN</th>
+                <th class="w-20 no-print">AKSI</th>
+              </tr>
+            </thead>
+            <tbody id="lkhTableBody">
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TTD Area -->
+        <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
+          <div class="text-center w-64">
+            <p>Yang membuat Laporan</p>
+            <div class="h-28 flex items-center justify-center my-1 relative border border-dashed border-slate-200 print:border-none rounded">
+              <img id="imgTtdYuda" src="" alt="TTD Pegawai" class="max-h-24 object-contain">
+            </div>
+            <p id="signNamaYuda" class="font-bold underline uppercase">MUHAMMAD YUDA MASHURI</p>
+            <p id="signNipYuda">NIP. 19940110 202506 1 003</p>
+          </div>
+
+          <div class="text-center w-64">
+            <p id="signKotaTanggal">Sei Rampah, 20 Oktober 2026</p>
+            <p>Kasubbag Keuangan, Umum dan Logistik</p>
+            <div class="h-28 flex items-center justify-center my-1 relative border border-dashed border-slate-200 print:border-none rounded">
+              <img id="imgTtdMax" src="" alt="TTD Kasubbag" class="max-h-24 object-contain">
+            </div>
+            <p id="signNamaKasubbag" class="font-bold underline uppercase">MAXDONALD OCTAVIANUS S.</p>
+            <p id="signNipKasubbag">NIP. 19791004 200912 1 001</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCRPtxs3nynGMQPDOaQr4McAqqMo1b-YHQ",
+      authDomain: "ekinerja-kpu-sergai.firebaseapp.com",
+      projectId: "ekinerja-kpu-sergai",
+      storageBucket: "ekinerja-kpu-sergai.firebasestorage.app",
+      messagingSenderId: "225025210344",
+      appId: "1:225025210344:web:749f3e37ca8946bec5965d",
+      measurementId: "G-V3XTQB6D3R"
+    };
+
+    let isFirebaseActive = false;
+    let dbRef = null;
+
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "") {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        dbRef = firebase.database();
+        isFirebaseActive = true;
+      } catch (e) {
+        console.warn("Firebase fallback to LocalStorage:", e);
+      }
+    }
+
+    let tempPegawaiTtd = null;
+    let tempKasubbagTtd = null;
+
+    function previewTtdImage(input, targetImgId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgElem = document.getElementById(targetImgId);
+          imgElem.src = e.target.result;
+          imgElem.classList.remove('hidden');
+
+          if(targetImgId === 'previewPegawai') tempPegawaiTtd = e.target.result;
+          if(targetImgId === 'previewKasubbag') tempKasubbagTtd = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function uploadDirectTTD(input, targetType) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Img = e.target.result;
+          const userKey = currentUser.nip.replace(/\s+/g, '');
+
+          if (targetType === 'ttdPegawai') {
+            currentUser.ttdPegawai = base64Img;
+            document.getElementById('imgTtdYuda').src = base64Img;
+          } else if (targetType === 'ttdKasubbag') {
+            currentUser.ttdKasubbag = base64Img;
+            document.getElementById('imgTtdMax').src = base64Img;
+          }
+
+          localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+
+          if (isFirebaseActive && dbRef) {
+            const updateObj = {};
+            updateObj[targetType] = base64Img;
+            dbRef.ref(`users/${userKey}`).update(updateObj);
+          }
+          alert("Tanda tangan berhasil disimpan ke Firebase!");
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    let currentUser = null;
+    let currentPeriodKey = "2026-10";
+
+    const periodPresets = [];
+    const monthsName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    for (let y = 2025; y <= 2027; y++) {
+      let startM = (y === 2025) ? 6 : 1;
+      for (let m = startM; m <= 12; m++) {
+        let key = `${y}-${m < 10 ? '0' + m : m}`;
+        let label = "";
+        let startDate = "";
+        
+        if (y === 2025 && m === 6) {
+          label = "Bulan Juni 2025";
+          startDate = "2025-06-01";
+        } else if (y === 2025 && m === 7) {
+          label = "Bulan Juli 2025";
+          startDate = "2025-06-21";
+        } else if (m === 1) {
+          label = `Bulan 21 Desember ${y-1} - 20 Januari ${y}`;
+          startDate = `${y-1}-12-21`;
+        } else {
+          label = `Bulan 21 ${monthsName[m-2]} - 20 ${monthsName[m-1]} ${y}`;
+          startDate = `${y}-${(m-1) < 10 ? '0' + (m-1) : (m-1)}-21`;
+        }
+
+        let endDate = `${y}-${m < 10 ? '0' + m : m}-20`;
+        let signDate = `20 ${monthsName[m-1]} ${y}`;
+
+        periodPresets.push({
+          key: key,
+          label: label,
+          start: startDate,
+          end: endDate,
+          signDate: signDate
+        });
+      }
+    }
+
+    window.onload = function() {
+      populatePeriodSelector();
+      
+      const savedUser = localStorage.getItem('lkh_session_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        launchDashboard();
+      }
+    };
+
+    function populatePeriodSelector() {
+      const select = document.getElementById('periodSelector');
+      select.innerHTML = '';
+      periodPresets.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.key;
+        opt.textContent = p.label;
+        if(p.key === currentPeriodKey) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function switchAuthTab(tab) {
+      if(tab === 'login') {
+        document.getElementById('formLogin').classList.remove('hidden');
+        document.getElementById('formRegister').classList.add('hidden');
+        document.getElementById('tabLogin').className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 bg-white text-red-700 shadow-sm";
+        document.getElementById('tabRegister').className = "flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-all duration-300";
+      } else {
+        document.getElementById('formLogin').classList.add('hidden');
+        document.getElementById('formRegister').classList.remove('hidden');
+        document.getElementById('tabRegister').className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 bg-white text-red-700 shadow-sm";
+        document.getElementById('tabLogin').className = "flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-all duration-300";
+      }
+    }
+
+    function applyUserPresetLogin() {
+      const preset = document.getElementById('loginUserPreset').value;
+      if (preset === 'yuda') {
+        document.getElementById('loginEmail').value = 'myudamash@gmail.com';
+        document.getElementById('loginPassword').value = '123456';
+      } else if (preset === 'max') {
+        document.getElementById('loginEmail').value = 'maxdonald@kpu.go.id';
+        document.getElementById('loginPassword').value = '123456';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      
+      let userKey = "199401102025061003";
+      if(email.includes('max')) {
+        userKey = "197910042009121001";
+        currentUser = {
+          nama: "MAXDONALD OCTAVIANUS S.",
+          nip: "19791004 200912 1 001",
+          jabatan: "Kasubbag Keuangan, Umum dan Logistik",
+          kasubbagNama: "MAXDONALD OCTAVIANUS S.",
+          kasubbagNip: "19791004 200912 1 001",
+          email: email
+        };
+      } else {
+        currentUser = {
+          nama: "MUHAMMAD YUDA MASHURI",
+          nip: "19940110 202506 1 003",
+          jabatan: "Penata Kelola Sistem dan Teknologi Informasi",
+          kasubbagNama: "MAXDONALD OCTAVIANUS S.",
+          kasubbagNip: "19791004 200912 1 001",
+          email: email
+        };
+      }
+
+      localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+      launchDashboard();
+
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
+          if (snap.exists()) {
+            currentUser = { ...currentUser, ...snap.val() };
+            localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+            launchDashboard();
+          }
+        }).catch(err => console.log(err));
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const nipVal = document.getElementById('regNip').value;
+      const userKey = nipVal.replace(/\s+/g, '');
+
+      currentUser = {
+        nama: document.getElementById('regNama').value,
+        nip: nipVal,
+        jabatan: document.getElementById('regJabatan').value,
+        email: document.getElementById('regEmail').value,
+        kasubbagNama: document.getElementById('regKasubbagNama').value || "MAXDONALD OCTAVIANUS S.",
+        kasubbagNip: document.getElementById('regKasubbagNip').value || "19791004 200912 1 001",
+        ttdPegawai: tempPegawaiTtd || "",
+        ttdKasubbag: tempKasubbagTtd || ""
+      };
+
+      localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).set(currentUser);
+      }
+
+      launchDashboard();
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('lkh_session_user');
+      location.reload();
+    }
+
+    function launchDashboard() {
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('mainDashboard').classList.remove('hidden');
+
+      document.getElementById('navUserName').textContent = currentUser.nama;
+      document.getElementById('navUserNip').textContent = 'NIP. ' + currentUser.nip;
+
+      document.getElementById('docNama').textContent = currentUser.nama;
+      document.getElementById('docNip').textContent = currentUser.nip;
+      document.getElementById('docJabatan').textContent = currentUser.jabatan;
+
+      document.getElementById('signNamaYuda').textContent = currentUser.nama;
+      document.getElementById('signNipYuda').textContent = 'NIP. ' + currentUser.nip;
+
+      document.getElementById('signNamaKasubbag').textContent = currentUser.kasubbagNama || "MAXDONALD OCTAVIANUS S.";
+      document.getElementById('signNipKasubbag').textContent = 'NIP. ' + (currentUser.kasubbagNip || "19791004 200912 1 001");
+
+      if (currentUser.ttdPegawai) {
+        document.getElementById('imgTtdYuda').src = currentUser.ttdPegawai;
+      }
+      if (currentUser.ttdKasubbag) {
+        document.getElementById('imgTtdMax').src = currentUser.ttdKasubbag;
+      }
+
+      // Sync TTD dari Firebase
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
+          if (snap.exists()) {
+            const data = snap.val();
+            if (data.ttdPegawai) {
+              currentUser.ttdPegawai = data.ttdPegawai;
+              document.getElementById('imgTtdYuda').src = data.ttdPegawai;
+            }
+            if (data.ttdKasubbag) {
+              currentUser.ttdKasubbag = data.ttdKasubbag;
+              document.getElementById('imgTtdMax').src = data.ttdKasubbag;
+            }
+            localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+          }
+        });
+      }
+
+      loadPeriodData();
+    }
+
+    function changePeriod() {
+      currentPeriodKey = document.getElementById('periodSelector').value;
+      loadPeriodData();
+    }
+
+    function loadPeriodData() {
+      const periodObj = periodPresets.find(p => p.key === currentPeriodKey) || periodPresets[16];
+      document.getElementById('docPeriode').textContent = periodObj.label;
+      document.getElementById('signKotaTanggal').textContent = `Sei Rampah, ${periodObj.signDate}`;
+
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+
+      let localRows = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (localRows.length === 0) {
+        localRows = generateDaysBetween(periodObj.start, periodObj.end);
+        localStorage.setItem(storageKey, JSON.stringify(localRows));
+      }
+      renderTable(localRows);
+
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).once('value').then((snapshot) => {
+          let fbRows = snapshot.val();
+          if (fbRows && fbRows.length > 0) {
+            localStorage.setItem(storageKey, JSON.stringify(fbRows));
+            renderTable(fbRows);
+          }
+        }).catch(err => console.log(err));
+      }
+    }
+
+    function generateDaysBetween(startStr, endStr) {
+      const result = [];
+      const curr = new Date(startStr);
+      const end = new Date(endStr);
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+      let itemNo = 1;
+      while (curr <= end) {
+        const dayIdx = curr.getDay();
+        if (dayIdx !== 0 && dayIdx !== 6) {
+          const dateFormatted = `${days[dayIdx]}, ${curr.getDate()} ${months[curr.getMonth()]} ${curr.getFullYear()}`;
+          const isSenin = (dayIdx === 1);
+
+          result.push({
+            no: itemNo++,
+            waktu: dateFormatted,
+            uraian: isSenin ? "Apel Pagi Senin Rutin." : "",
+            output: isSenin ? "Terlaksananya Apel Pagi Senin secara tertib dan lancar" : "",
+            keterangan: "Selesai"
+          });
+        }
+        curr.setDate(curr.getDate() + 1);
+      }
+      return result;
+    }
+
+    // FUNGSI RENDER TABEL PERBAIKAN: MERGE TANGGAL DAN NOMOR (NO) BERSAMAAN
+    function renderTable(data) {
+      const tbody = document.getElementById('lkhTableBody');
+      tbody.innerHTML = '';
+
+      const dateCounts = {};
+      data.forEach(item => {
+        const dateKey = item.waktu.trim();
+        dateCounts[dateKey] = (dateCounts[dateKey] || 0) + 1;
+        if (item.uraian) {
+          item.uraian = item.uraian.replace(/^\d+\.\s*/, '').trim();
+        }
+      });
+
+      const dateTracker = {};
+      let currentNumber = 1;
+
+      data.forEach((item, index) => {
+        const dateKey = item.waktu.trim();
+        dateTracker[dateKey] = (dateTracker[dateKey] || 0) + 1;
+        
+        const count = dateCounts[dateKey];
+        const currentIdx = dateTracker[dateKey];
+
+        let formattedUraian = item.uraian || '';
+        if (count > 1 && formattedUraian !== '') {
+          formattedUraian = `${currentIdx}. ${formattedUraian}`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+
+        let dateAndNoCellHtml = '';
+        if (currentIdx === 1) {
+          dateAndNoCellHtml = `
+            <td rowspan="${count}" class="text-center font-bold align-middle border-excel">${currentNumber++}</td>
+            <td rowspan="${count}" class="font-semibold bg-white border-excel align-middle">${item.waktu}</td>
+          `;
+        }
+
+        tr.innerHTML = `
+          ${dateAndNoCellHtml}
+          <td>
+            <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${formattedUraian}</textarea>
+          </td>
+          <td>
+            <textarea onchange="updateCell(${index}, 'output', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.output || ''}</textarea>
+          </td>
+          <td class="text-center align-middle">
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-xs">${item.keterangan || 'Selesai'}</span>
+          </td>
+          <td class="text-center no-print align-middle">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="insertRowBelow(${index})" title="Sisip Baris Dibawah" class="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 rounded p-1 transition">
+                <i class="fa-solid fa-plus text-xs"></i>
+              </button>
+              <button onclick="deleteRow(${index})" title="Hapus Baris" class="text-slate-400 hover:text-red-600 hover:bg-red-100 rounded p-1 transition">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateCell(index, field, value) {
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      if (rowsData[index]) {
+        if (field === 'uraian') {
+          value = value.replace(/^\d+\.\s*/, '').trim();
+        }
+        rowsData[index][field] = value;
+
+        localStorage.setItem(storageKey, JSON.stringify(rowsData));
+
+        if (isFirebaseActive && dbRef) {
+          dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
+        }
+
+        renderTable(rowsData);
+      }
+    }
+
+    function insertRowBelow(index) {
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      const targetDate = rowsData[index].waktu;
+      const newItem = {
+        no: 0,
+        waktu: targetDate,
+        uraian: "",
+        output: "",
+        keterangan: "Selesai"
+      };
+
+      rowsData.splice(index + 1, 0, newItem);
+
+      localStorage.setItem(storageKey, JSON.stringify(rowsData));
+      if (isFirebaseActive && dbRef) {
+        dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
+      }
+
+      renderTable(rowsData);
+    }
+
+    function deleteRow(index) {
+      if (confirm("Hapus baris kegiatan ini?")) {
+        const userKey = currentUser.nip.replace(/\s+/g, '');
+        const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+        let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+        rowsData.splice(index, 1);
+
+        localStorage.setItem(storageKey, JSON.stringify(rowsData));
+        if (isFirebaseActive && dbRef) {
+          dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(rowsData);
+        }
+
+        renderTable(rowsData);
+      }
+    }
+
+    function generateWorkingDays() {
+      if (confirm("Regenerate tabel hari kerja untuk periode ini?")) {
+        const periodObj = periodPresets.find(p => p.key === currentPeriodKey) || periodPresets[16];
+        const newRows = generateDaysBetween(periodObj.start, periodObj.end);
+        
+        const userKey = currentUser.nip.replace(/\s+/g, '');
+        const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+        localStorage.setItem(storageKey, JSON.stringify(newRows));
+        
+        if (isFirebaseActive && dbRef) {
+          dbRef.ref(`lkh_reports/${userKey}/${currentPeriodKey}`).set(newRows);
+        }
+
+        renderTable(newRows);
+      }
+    }
+  </script>
+</body>
+</html>
