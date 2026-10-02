@@ -311,7 +311,7 @@
           <div class="text-center w-64">
             <p>Yang membuat Laporan</p>
             <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden">
-              <img id="imgTtdYuda" src="Untitled-removebg-preview.png" alt="TTD Pegawai" class="max-h-24 object-contain">
+              <img id="imgTtdYuda" src="" alt="TTD Pegawai" class="max-h-24 object-contain">
             </div>
             <p id="signNamaYuda" class="font-bold underline uppercase">MUHAMMAD YUDA MASHURI</p>
             <p id="signNipYuda">NIP. 19940110 202506 1 003</p>
@@ -322,7 +322,7 @@
             <p id="signKotaTanggal">Sei Rampah, 20 Oktober 2026</p>
             <p>Kasubbag Keuangan, Umum dan Logistik</p>
             <div class="h-28 flex items-center justify-center my-1 relative">
-              <img id="imgTtdMax" src="WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png" alt="TTD Kasubbag" class="max-h-24 object-contain">
+              <img id="imgTtdMax" src="" alt="TTD Kasubbag" class="max-h-24 object-contain">
             </div>
             <p id="signNamaKasubbag" class="font-bold underline uppercase">MAXDONALD OCTAVIANUS S.</p>
             <p id="signNipKasubbag">NIP. 19791004 200912 1 001</p>
@@ -504,9 +504,7 @@
           jabatan: "Kasubbag Keuangan, Umum dan Logistik",
           kasubbagNama: "MAXDONALD OCTAVIANUS S.",
           kasubbagNip: "19791004 200912 1 001",
-          email: email,
-          ttdPegawai: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png",
-          ttdKasubbag: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
+          email: email
         };
       } else {
         currentUser = {
@@ -515,9 +513,7 @@
           jabatan: "Penata Kelola Sistem dan Teknologi Informasi",
           kasubbagNama: "MAXDONALD OCTAVIANUS S.",
           kasubbagNip: "19791004 200912 1 001",
-          email: email,
-          ttdPegawai: "Untitled-removebg-preview.png",
-          ttdKasubbag: "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
+          email: email
         };
       }
 
@@ -534,8 +530,8 @@
         email: document.getElementById('regEmail').value,
         kasubbagNama: document.getElementById('regKasubbagNama').value || "MAXDONALD OCTAVIANUS S.",
         kasubbagNip: document.getElementById('regKasubbagNip').value || "19791004 200912 1 001",
-        ttdPegawai: tempPegawaiTtd || "Untitled-removebg-preview.png",
-        ttdKasubbag: tempKasubbagTtd || "WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png"
+        ttdPegawai: tempPegawaiTtd || "",
+        ttdKasubbag: tempKasubbagTtd || ""
       };
       localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
       launchDashboard();
