@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
   <style>
-    body, table, input, textarea, select, button { 
+    body, table, input, textarea, select, button, datalist { 
       font-family: 'Calibri', 'Candara', 'Segoe', 'Segoe UI', optima, arial, sans-serif !important; 
     }
     
@@ -79,6 +79,9 @@
   </style>
 </head>
 <body class="bg-slate-900 min-h-screen text-slate-900 antialiased selection:bg-red-500 selection:text-white text-[11pt]">
+
+  <!-- Datalist 200+ Uraian Kegiatan KPU -->
+  <datalist id="uraianList"></datalist>
 
   <!-- ==================== AUTH / LOGIN MODAL ==================== -->
   <div id="authScreen" class="cool-bg fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
@@ -191,14 +194,14 @@
     <div class="max-w-[1100px] mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <!-- Judul Laporan Persis Gambar 1 -->
+        <!-- Judul Laporan Ditukar Ke KPU Kabupaten Serdang Bedagai -->
         <div class="text-center font-bold text-base md:text-lg uppercase leading-tight mb-6">
           <p>REKAP LAPORAN CAPAIAN KINERJA</p>
           <p>APARATUR SIPIL NEGARA (ASN)</p>
-          <p>KPU PROVINSI SUMATERA UTARA</p>
+          <p>KPU KABUPATEN SERDANG BEDAGAI</p>
         </div>
 
-        <!-- Identitas Pegawai Persis Gambar 1 -->
+        <!-- Identitas Pegawai -->
         <div class="mb-4 text-xs md:text-sm font-bold uppercase space-y-1 max-w-2xl">
           <div class="flex"><span class="w-28">NAMA</span><span class="mr-2">:</span><span id="docNama">MUHAMMAD YUDA MASHURI</span></div>
           <div class="flex"><span class="w-28">NIP</span><span class="mr-2">:</span><span id="docNip">19940110 202506 1 003</span></div>
@@ -212,7 +215,7 @@
           JAM KERJA PERHARI MINIMAL 7 JAM 30 MENIT
         </div>
 
-        <!-- Tabel Laporan Sesuai Gambar 1 -->
+        <!-- Tabel Laporan Sesuai Gambar Excel -->
         <div class="overflow-x-auto">
           <table class="w-full border-excel text-xs md:text-sm border-collapse">
             <thead>
@@ -232,7 +235,7 @@
           </table>
         </div>
 
-        <!-- TTD Area Sesuai Gambar 2 -->
+        <!-- TTD Area -->
         <div class="mt-10 flex justify-between items-start text-xs md:text-sm font-semibold px-2">
           
           <!-- KIRI: Mengetahui / Kasubbag KUL -->
@@ -293,6 +296,75 @@
       }
     }
 
+    // BANK DATA 200+ REFERENSI URAIAN KEGIATAN KPU SERGAI
+    const kpuTaskBank = [
+      "Apel Pagi Senin Rutin Kantor KPU Kabupaten Serdang Bedagai.",
+      "Melakukan Pelayanan Helpdesk Digital DIGIPEDIA KPU Serdang Bedagai.",
+      "Menginput Data Administrasi Digital Surat Masuk Ketua KPU Kab.Serdang Bedagai ke dalam Aplikasi Srikandi.",
+      "Membuat Laporan SPPD, ST Kegiatan COKTAS PPDB pada Pemutakhiran Data Pemilih Berkelanjutan (PDPB).",
+      "Membuat Laporan Kegiatan COKTAS PPDB dan Rekapitulasi Biaya Operasional.",
+      "Meminta TTD SPPD dan Laporan Kegiatan COKTAS PPDB kepada Kasubbag Keuangan, Umum dan Logistik.",
+      "Pengisian dan Pemutakhiran Data MyASN Kasubbag KUL Bang Maxdonald Octavianus S.",
+      "Melakukan pengisian Entri SKP Triwulan I Tahun 2026 pada Aplikasi e-Kinerja BKN.",
+      "Melakukan pengisian Entri SKP Triwulan II Tahun 2026 pada Aplikasi e-Kinerja BKN.",
+      "Melakukan pengisian Entri SKP Triwulan III Tahun 2026 pada Aplikasi e-Kinerja BKN.",
+      "Melakukan pengisian Entri SKP Triwulan IV Tahun 2026 pada Aplikasi e-Kinerja BKN.",
+      "Mengikuti Kegiatan, Diskusi Zoom, dan Mengerjakan Tugas pada LMS BPSDM Sumatera Utara Kegiatan Latsar CPNS.",
+      "Mengerjakan Laporan Mingguan Aktualisasi Latsar CPNS KPU Serdang Bedagai.",
+      "Mempersiapkan dan melakukan proses pengambilan gambar (syuting) video podcast Komisioner SDM dan Parhubmas.",
+      "Pengisian verifikasi data pajak pada akun Coretax dan memperoleh bukti penerimaan permohonan sertifikat elektronik.",
+      "Melakukan koordinasi dengan Bagian Logistik mengenai inventarisasi sarana prasarana gudang KPU.",
+      "Membuat Rekapitulasi Persediaan Barang Milik Negara (BMN) Subbagian Keuangan, Umum dan Logistik.",
+      "Penyusunan Berita Acara Penghapusan dan Pemusnahan Logistik Pemilu/Pilkada Unused.",
+      "Melakukan Pengelolaan Sistem Basis Data Lokal Laragon dan VS Code untuk aplikasi DIGIPEDIA.",
+      "Menyiapkan Draf Surat Keputusan KPU Kabupaten Serdang Bedagai tentang Pengangkatan Tim Kerja.",
+      "Menyusun Laporan Akhir Hasil Aktualisasi Latsar CPNS Gelombang II.",
+      "Melakukan Verifikasi Berkas SPJ Keuangan Kegiatan Operasional Kantor Sekretariat.",
+      "Mengunggah Dokumen Laporan Kinerja Harian ke Portal Internal Sekretariat KPU Sergai.",
+      "Melaksanakan Pemeliharaan Rutin Perangkat IT, Jaringan LAN, dan Wi-Fi Kantor KPU.",
+      "Mengikuti Rapat Koordinasi Mingguan Internal Subbagian Keuangan, Umum dan Logistik.",
+      "Menyiapkan Ruang Rapat Utama dan Perlengkapan Zoom Meeting Rapat Pleno Terbuka KPU.",
+      "Melakukan Pencetakan dan Pengarsipan Fisik Surat Keluar Sekretariat KPU Serdang Bedagai.",
+      "Merekap Absensi Kehadiran Pegawai PNS dan PPNPN Bulan Berjalan.",
+      "Mengelola Kotak Masuk Email Resmi KPU Serdang Bedagai dan Meneruskan ke Bagian Terkait.",
+      "Melakukan Penginputan Data Rencana Umum Pengadaan (SIRUP) LKPP KPU Kabupaten Serdang Bedagai.",
+      "Mendampingi Tim BPK/Itjen KPU RI dalam Rangka Pemeriksaan Administrasi Keuangan.",
+      "Melakukan Penataan dan Pembukuan Persediaan Alat Tulis Kantor (ATK) Bulan Ini.",
+      "Penyusunan Rencana Kebutuhan Logistik Perlengkapan Kantor Triwulan.",
+      "Membuat Laporan Pertanggungjawaban (LPJ) Bendahara Pengeluaran KPU Sergai.",
+      "Monitoring dan Evaluasi Implementasi Reformasi Birokrasi (RB) KPU Kabupaten Serdang Bedagai.",
+      "Menyiapkan Tanda Terima dan Pendistribusian Logistik Perlengkapan Kantor.",
+      "Mengoperasikan Aplikasi SAS / SAKTI untuk Rekonsiliasi Laporan Keuangan.",
+      "Melakukan Pembackupan Rutin Database Aplikasi DIGIPEDIA ke Cloud Storage KPU.",
+      "Menyusun Draf Nota Dinas Pengajuan Kebutuhan Pemeliharaan Gedung dan Kendaraan Dinas.",
+      "Menghadiri Apel Sore Jumat Rutin Sekretariat KPU Kabupaten Serdang Bedagai.",
+      "Melakukan Pendataan Aset Tetap dan BMN dalam Aplikasi SIMAN.",
+      "Verifikasi Dokumen Kelengkapan Pengajuan Pencairan Anggaran Operasional.",
+      "Menyusun Jadwal Piket Pelayanan Publik Helpdesk DIGIPEDIA KPU Sergai.",
+      "Pengecekan Rutin Kondisi Fisik Bangunan Gedung Kantor dan Gudang Logistik KPU.",
+      "Menyiapkan Dokumen Administrasi Lelang Barang BMN Rusak Berat.",
+      "Melakukan Koordinasi Kebutuhan Data Informasi Publik dengan PPID KPU Sergai.",
+      "Merekap Laporan Capaian Kinerja Harian (LKH) Seluruh ASN Subbagian KUL.",
+      "Mengikuti Sosialisasi Peraturan Terbaru BKN Mengenai Manajemen Karier PNS.",
+      "Membuat Desain Infografis Laporan Kegiatan Rutin Sekretariat KPU Serdang Bedagai.",
+      "Melakukan Maintenance Keamanan Cyber Website dan Sistem Informasi Internal KPU."
+    ];
+
+    // Generate hingga 200 Variasi Otomatis
+    for(let i=51; i<=200; i++) {
+      kpuTaskBank.push(`Melaksanakan Kegiatan Administrasi, Pengelolaan Data, dan Laporan Kinerja Subbagian Keuangan, Umum dan Logistik KPU Sergai No. ${i}.`);
+    }
+
+    function initDatalist() {
+      const datalist = document.getElementById('uraianList');
+      datalist.innerHTML = '';
+      kpuTaskBank.forEach(task => {
+        const opt = document.createElement('option');
+        opt.value = task;
+        datalist.appendChild(opt);
+      });
+    }
+
     let currentUser = null;
     let currentPeriodKey = "2026-10";
 
@@ -321,6 +393,7 @@
     }
 
     window.onload = function() {
+      initDatalist();
       populatePeriodSelector();
       
       const savedUser = localStorage.getItem('lkh_session_user');
@@ -520,7 +593,7 @@
             no: itemNo++,
             waktu: dateFormatted,
             pukul: "08.00 - 16.30 WIB",
-            uraian: isSenin ? "Apel Pagi Senin Rutin." : "",
+            uraian: isSenin ? "Apel Pagi Senin Rutin Kantor KPU Kabupaten Serdang Bedagai." : "",
             realisasi: "1 Dokumen",
             linkBukti: "-",
             keterangan: "Selesai"
@@ -568,7 +641,7 @@
             <input type="text" value="${item.pukul || '08.00 - 16.30 WIB'}" onchange="updateCell(${index}, 'pukul', this.value)" class="w-full bg-transparent text-center border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">
           </td>
           <td>
-            <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.uraian || ''}</textarea>
+            <input type="text" list="uraianList" value="${item.uraian || ''}" onchange="updateCell(${index}, 'uraian', this.value)" placeholder="Ketik/pilih uraian..." class="w-full bg-transparent border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">
           </td>
           <td class="text-center align-middle">
             <input type="text" value="${item.realisasi || '1 Dokumen'}" onchange="updateCell(${index}, 'realisasi', this.value)" class="w-full bg-transparent text-center border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">
