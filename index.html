@@ -111,7 +111,7 @@
 
     <div class="bg-white glass-effect rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 border border-white/40 my-auto max-h-[92vh] flex flex-col overflow-y-auto animate__animated animate__zoomIn relative z-10">
       
-      <!-- Header Login dengan Logo Vector KPU Resmi -->
+      <!-- Header Login dengan Logo Vector KPU -->
       <div class="text-center mb-5 flex-shrink-0">
         <div class="w-20 h-20 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xl p-2 border-2 border-red-800 ring-4 ring-red-500/20">
           <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -211,6 +211,7 @@
   <!-- ==================== DASHBOARD UTAMA ==================== -->
   <div id="mainDashboard" class="hidden min-h-screen bg-slate-100 pb-12">
     
+    <!-- Navbar Top dengan Logo KPU Vector -->
     <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-lg border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
@@ -282,22 +283,10 @@
     <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <!-- Header LKH dengan Logo KPU Vektor Murni -->
-        <div class="flex items-center justify-center gap-4 mb-6 pb-3 border-b-2 border-slate-900 print:border-black">
-          <div class="w-16 h-16 flex-shrink-0">
-            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" rx="15" fill="#B91C1C"/>
-              <path d="M20 20H80V80H20V20Z" fill="white"/>
-              <path d="M25 25H75V42H25V25Z" fill="#B91C1C"/>
-              <text x="50" y="37" font-family="sans-serif" font-weight="900" font-size="13" fill="white" text-anchor="middle">KPU</text>
-              <path d="M25 47H75V75H25V47Z" fill="#F59E0B"/>
-              <path d="M30 52H70V70H30V52Z" fill="#1E293B"/>
-            </svg>
-          </div>
-          <div class="text-center">
-            <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
-            <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
-          </div>
+        <!-- Header LKH Polos Tanpa Logo Sesuai Permintaan -->
+        <div class="text-center mb-6 pb-2 border-b-2 border-slate-900 print:border-black">
+          <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
+          <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
         </div>
 
         <div class="mb-6 text-xs md:text-sm font-semibold space-y-1.5 max-w-xl">
@@ -419,23 +408,6 @@
         reader.readAsDataURL(input.files[0]);
       }
     }
-
-    const kpuKnowledgeBase = {
-      "Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
-      "Menginput Data Administrasi Digital Surat Masuk Ketua KPU Kab.Serdang Bedagai ke dalam Aplikasi Srikandi.": "Terlaksananya Dokumen Administrasi Digital Surat Masuk dalam Aplikasi Srikandi",
-      "Membuat Laporan SPPD, ST Kegiatan COKTAS PPDB, Mengikuti KEGIATAN PENCOCOKAN PENELITIAN TERBATAS (COKTAS) PADA PEMUTAKHIRAN DATA PEMILIH BERKELANJUTAN (PDPB) TAHUN 2026": "Tersedianya Laporan Mengikuti Kegiatan Coktas",
-      "Membuat Laporan KEGIATAN PENCOCOKAN PENELITIAN TERBATAS (COKTAS) PADA PEMUTAKHIRAN DATA PEMILIH BERKELANJUTAN (PDPB) TAHUN 2026": "Terlaksananya laporan dan data dalam Mengikuti Kegiatan COKTAS 2026",
-      "Membuat Laporan Kegiatan COKTAS PPDB": "Terlaksananya Laporan dalam Mengikuti Kegiatan Coktas ke bagian keuangan",
-      "Meminta TTD SPPD dan Laporan Kegiatan COKTAS PPDB": "Tersedianya SPPD Laporan dalam Mengikuti Kegiatan Coktas",
-      "Pengisian Data MyASN Kasubbag KUL": "Tersedianya kelengkapan data pada MyASN Kasubbag KUL bang Max",
-      "Pengisian Data MyASN Kasubbag KUL SPMT": "Tersedianya kelengkapan data pada MyASN Kasubbag KUL bang Max",
-      "Melakukan pengisian Entri SKP Triwulan III Tahun 2025 pada Aplikasi e-Kinerja BKN": "Terlaksananya pengisian dan pemutakhiran data Sasaran Kinerja Pegawai (SKP) Triwulan III Tahun 2025 melalui aplikasi e-Kinerja BKN",
-      "Mengerjakan Ekin SKP BKN Triwulan 2": "Terlaksananya Draft Laporan Ekin SKP BKN Triwulan 2",
-      "Mengikuti Kegiatan, Diskusi Zoom, dan mengerjakan tugas tugas pada LMS BPSDM Sumatera Utara pada kegaiatan Latsar CPNS 2026": "Terlaksananya partisipasi dalam Mengikuti Kegiatan Latsar CPNS 2026",
-      "Mengerjakan Laporan Mingguan Aktualisasi Latsar CPNS 2026": "Terlaksananya partisipasi dalam Mengikuti Kegiatan Latsar CPNS 2026",
-      "Mempersiapkan dan melakukan proses pengambilan gambar (syuting) video podcast Komisioner SDM dan Parhubmas bersama Ketua Komisi DPRD.": "Terlaksananya proses perekaman podcast dengan lancar sebagai bahan publikasi dan dokumentasi kegiatan.",
-      "Pengisian verifikasi data pajak pada akun Coretax dan memperoleh bukti penerimaan surat permohonan penerbitan sertifikat elektronik.": "Terlaksananya verifikasi data pajak pada Coretax dan diperolehnya bukti penerimaan permohonan sertifikat elektronik."
-    };
 
     let currentUser = null;
     let currentPeriodKey = "2026-10";
@@ -618,7 +590,7 @@
         document.getElementById('imgTtdMax').src = currentUser.ttdKasubbag;
       }
 
-      // SelaluSync TTD dari Firebase saat masuk ke Dashboard
+      // Sync TTD dari Firebase
       const userKey = currentUser.nip.replace(/\s+/g, '');
       if (isFirebaseActive && dbRef) {
         dbRef.ref(`users/${userKey}`).once('value').then((snap) => {
@@ -698,7 +670,7 @@
       return result;
     }
 
-    // FUNGSI RENDER TABEL: MERGED ROWSPAN TANGGAL & AKSI PLUS + HAPUS SEJAJAR
+    // RENDER TABEL: TANGGAL DIMERGE, NOMOR UTUH BERURUTAN (TIDAK DIMERGE)
     function renderTable(data) {
       const tbody = document.getElementById('lkhTableBody');
       tbody.innerHTML = '';
@@ -736,7 +708,7 @@
         }
 
         tr.innerHTML = `
-          <td class="text-center font-bold align-middle">${item.no}</td>
+          <td class="text-center font-bold align-middle border-excel">${item.no}</td>
           ${dateCellHtml}
           <td>
             <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${formattedUraian}</textarea>
