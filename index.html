@@ -211,7 +211,7 @@
   <!-- ==================== DASHBOARD UTAMA ==================== -->
   <div id="mainDashboard" class="hidden min-h-screen bg-slate-100 pb-12">
     
-    <!-- Navbar Top dengan Logo KPU Vector -->
+    <!-- Navbar Top -->
     <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-lg border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
@@ -260,7 +260,6 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <!-- Tombol Direct Upload TTD Pegawai & Kasubbag -->
           <label title="Upload TTD Pegawai ke Firebase" class="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
             <i class="fa-solid fa-file-signature text-red-600"></i> Upload TTD Saya
             <input type="file" accept="image/*" onchange="uploadDirectTTD(this, 'ttdPegawai')" class="hidden">
@@ -283,7 +282,7 @@
     <div class="max-w-5xl mx-auto px-2 md:px-4 mt-6">
       <div class="bg-white p-4 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
         
-        <!-- Header LKH Polos Tanpa Logo Sesuai Permintaan -->
+        <!-- Header LKH -->
         <div class="text-center mb-6 pb-2 border-b-2 border-slate-900 print:border-black">
           <h2 class="font-black text-base md:text-xl tracking-tight uppercase">LAPORAN KINERJA HARIAN PNS</h2>
           <h3 class="font-bold text-xs md:text-sm tracking-wide uppercase text-slate-800">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
@@ -670,7 +669,7 @@
       return result;
     }
 
-    // RENDER TABEL: TANGGAL DIMERGE, NOMOR UTUH BERURUTAN (TIDAK DIMERGE)
+    // RENDER TABEL: TANGGAL DAN NOMOR DUGABUNG/DIMERGE BERSAMAAN
     function renderTable(data) {
       const tbody = document.getElementById('lkhTableBody');
       tbody.innerHTML = '';
@@ -685,9 +684,9 @@
       });
 
       const dateTracker = {};
+      let serialNumber = 1;
 
       data.forEach((item, index) => {
-        item.no = index + 1;
         const dateKey = item.waktu.trim();
         dateTracker[dateKey] = (dateTracker[dateKey] || 0) + 1;
         
@@ -702,14 +701,16 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50";
 
-        let dateCellHtml = '';
+        let dateAndNoCellHtml = '';
         if (currentIdx === 1) {
-          dateCellHtml = `<td rowspan="${count}" class="font-semibold bg-white border-excel align-middle">${item.waktu}</td>`;
+          dateAndNoCellHtml = `
+            <td rowspan="${count}" class="text-center font-bold align-middle border-excel">${serialNumber++}</td>
+            <td rowspan="${count}" class="font-semibold bg-white border-excel align-middle">${item.waktu}</td>
+          `;
         }
 
         tr.innerHTML = `
-          <td class="text-center font-bold align-middle border-excel">${item.no}</td>
-          ${dateCellHtml}
+          ${dateAndNoCellHtml}
           <td>
             <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${formattedUraian}</textarea>
           </td>
@@ -770,7 +771,6 @@
       };
 
       rowsData.splice(index + 1, 0, newItem);
-      rowsData.forEach((item, idx) => item.no = idx + 1);
 
       localStorage.setItem(storageKey, JSON.stringify(rowsData));
       if (isFirebaseActive && dbRef) {
@@ -787,7 +787,6 @@
         let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
 
         rowsData.splice(index, 1);
-        rowsData.forEach((item, idx) => item.no = idx + 1);
 
         localStorage.setItem(storageKey, JSON.stringify(rowsData));
         if (isFirebaseActive && dbRef) {
