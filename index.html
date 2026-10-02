@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Kinerja CPNS & Pegawai Manager - KPU Kabupaten Serdang Bedagai</title>
+  
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDK (v9 Compact Version for Browser) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    
+    /* Excel Table Printing Styles */
+    @media print {
+      body { background: white !important; color: black !important; font-size: 11pt; }
+      .no-print, .no-print * { display: none !important; }
+      .print-only { display: block !important; }
+      .page-break { page-break-after: always; }
+      .border-excel { border: 1.5px solid #000 !important; }
+      .border-excel th, .border-excel td { border: 1px solid #000 !important; }
+      .bg-excel-header { background-color: #ffffff !important; }
+      @page { size: A4 portrait; margin: 12mm; }
+    }
+
+    .border-excel { border: 1.5px solid #000; }
+    .border-excel th, .border-excel td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
+    
+    /* Rotate Signature -90 deg for Muhammad Yuda */
+    .rotate-ttd-yuda {
+      transform: rotate(-90deg) scale(1.3);
+      transform-origin: center center;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800">
+
+  <!-- ==================== SECTION 1: AUTH / LOGIN MODAL ==================== -->
+  <div id="authScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-200">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-red-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+          <i class="fa-solid fa-box-archive text-3xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800">E-KINERJA KPU</h2>
+        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1">Kabupaten Serdang Bedagai</p>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="flex border-b border-slate-200 mb-6">
+        <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-red-700 border-b-2 border-red-700 text-center">Login</button>
+        <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 font-semibold text-slate-400 text-center hover:text-slate-600">Daftar Akun Baru</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Preset User / Email</label>
+          <select id="loginUserPreset" onchange="applyUserPresetLogin()" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg mb-2">
+            <option value="">-- Pilih User Cepat atau Ketik Manual --</option>
+            <option value="yuda">Muhammad Yuda Mashuri (CPNS)</option>
+            <option value="max">Maxdonald Octavianus S. (Kasubbag KUL)</option>
+          </select>
+          <input type="email" id="loginEmail" placeholder="nama@kpu.go.id" required class="w-full text-sm p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required class="w-full text-sm p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600">
+        </div>
+        <button type="submit" class="w-full py-3 bg-red-700 hover:bg-red-800 text-white font-bold rounded-lg shadow-md transition">Masuk ke E-Kinerja</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 hidden">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap & Gelar</label>
+          <input type="text" id="regNama" placeholder="MUHAMMAD YUDA MASHURI" required class="w-full text-sm p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">NIP</label>
+          <input type="text" id="regNip" placeholder="19940110 202506 1 003" required class="w-full text-sm p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Jabatan</label>
+          <input type="text" id="regJabatan" placeholder="Penata Kelola Sistem dan Teknologi Informasi" required class="w-full text-sm p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Email KPU / Kantor</label>
+          <input type="email" id="regEmail" placeholder="yuda@kpu.go.id" required class="w-full text-sm p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
+          <input type="password" id="regPassword" placeholder="Minimal 6 karakter" minlength="6" required class="w-full text-sm p-2.5 border border-slate-300 rounded-lg">
+        </div>
+        <button type="submit" class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg shadow-md transition">Buat Akun Pegawai</button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
+        <p><i class="fa-solid fa-shield-halved text-green-600 mr-1"></i> Mode Firebase Cloud Sync & Offline Storage Active</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN DASHBOARD ==================== -->
+  <div id="mainDashboard" class="hidden min-h-screen pb-12">
+    
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 text-white no-print sticky top-0 z-40 shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-red-700 rounded-xl flex items-center justify-center font-bold text-lg">KPU</div>
+          <div>
+            <h1 class="font-bold text-sm md:text-base leading-tight">E-KINERJA HARIAN CPNS & PEGAWAI</h1>
+            <p class="text-xs text-slate-400">Sekretariat KPU Kabupaten Serdang Bedagai</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="text-right hidden sm:block">
+            <div id="navUserName" class="font-bold text-sm text-amber-400">Muhammad Yuda Mashuri</div>
+            <div id="navUserNip" class="text-xs text-slate-400">NIP. 19940110 202506 1 003</div>
+          </div>
+          <button onclick="handleLogout()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-700 text-xs font-semibold rounded-lg transition border border-slate-700">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Control Panel / Forms (No Print) -->
+    <div class="max-w-7xl mx-auto px-4 mt-6 no-print space-y-6">
+      
+      <!-- Top Bar Controls -->
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        
+        <!-- Period Selector -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase">Pilih Periode Bulan LKH:</label>
+            <select id="periodSelector" onchange="changePeriod()" class="mt-1 text-sm font-semibold p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-red-600">
+              <!-- Dynamically Populated -->
+            </select>
+          </div>
+
+          <button onclick="generateWorkingDays()" class="mt-5 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow transition">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-amber-400"></i> Generate Hari Kerja (Sen-Jum)
+          </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-4 py-2.5 bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded-xl shadow transition flex items-center">
+            <i class="fa-solid fa-print mr-2"></i> Cetak / Simpan PDF
+          </button>
+          <button onclick="exportJSONBackup()" class="px-3 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition" title="Backup Database">
+            <i class="fa-solid fa-download"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Add New Activity Form -->
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center">
+          <i class="fa-solid fa-plus-circle text-red-700 mr-2"></i> Tambah Kegiatan Baru ke Tabel
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+          <div class="md:col-span-3">
+            <label class="block text-xs font-bold text-slate-500 mb-1">Tanggal Kegiatan</label>
+            <input type="date" id="inputTanggal" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg">
+          </div>
+
+          <div class="md:col-span-4">
+            <label class="block text-xs font-bold text-slate-500 mb-1">Uraian Kinerja (Auto-Suggest)</label>
+            <input type="text" id="inputUraian" list="listUraian" oninput="handleUraianInput()" placeholder="Ketik/Pilih uraian..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg">
+            <datalist id="listUraian"></datalist>
+          </div>
+
+          <div class="md:col-span-3">
+            <label class="block text-xs font-bold text-slate-500 mb-1">Output/Hasil Kinerja (Otomatis)</label>
+            <input type="text" id="inputOutput" list="listOutput" placeholder="Hasil kinerja..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg">
+            <datalist id="listOutput"></datalist>
+          </div>
+
+          <div class="md:col-span-2 flex items-end">
+            <button onclick="addNewEntryFromForm()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow transition">
+              <i class="fa-solid fa-check mr-1"></i> Simpan Baris
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== EXCEL TABLE REPORT SHEET (PRINT AREA) ==================== -->
+    <div class="max-w-5xl mx-auto px-4 mt-6">
+      <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-none print:p-0">
+        
+        <!-- Document Header -->
+        <div class="text-center mb-6">
+          <h2 class="font-bold text-base md:text-lg tracking-wide uppercase">LAPORAN KINERJA HARIAN CPNS</h2>
+          <h3 class="font-bold text-sm md:text-base tracking-wide uppercase">SEKRETARIAT KPU KABUPATEN SERDANG BEDAGAI</h3>
+        </div>
+
+        <!-- Meta Information Table -->
+        <div class="mb-6 text-xs md:text-sm font-semibold space-y-1.5 max-w-xl">
+          <div class="flex"><span class="w-28 uppercase">NAMA</span><span class="mr-2">:</span><span id="docNama" class="font-bold">MUHAMMAD YUDA MASHURI</span></div>
+          <div class="flex"><span class="w-28 uppercase">NIP</span><span class="mr-2">:</span><span id="docNip">19940110 202506 1 003</span></div>
+          <div class="flex"><span class="w-28 uppercase">JABATAN</span><span class="mr-2">:</span><span id="docJabatan">Penata Kelola Sistem dan Teknologi Informasi</span></div>
+          <div class="flex"><span class="w-28 uppercase">PERIODE</span><span class="mr-2">:</span><span id="docPeriode" class="font-bold">Bulan 21 September - 20 Oktober Tahun 2026</span></div>
+        </div>
+
+        <!-- Main LKH Excel Table -->
+        <table class="w-full border-excel text-xs md:text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100 font-bold text-center uppercase border-b-2 border-black">
+              <th class="w-10 py-2">NO</th>
+              <th class="w-44 py-2">WAKTU PELAKSANAAN</th>
+              <th class="py-2">URAIAN KINERJA</th>
+              <th class="w-56 py-2">OUTPUT/HASIL KINERJA</th>
+              <th class="w-24 py-2">KETERANGAN</th>
+            </tr>
+          </thead>
+          <tbody id="lkhTableBody">
+            <!-- Table rows injected via JS -->
+          </tbody>
+        </table>
+
+        <!-- Signatures Section -->
+        <div class="mt-12 flex justify-between items-start text-xs md:text-sm font-semibold px-4 pt-4">
+          
+          <!-- Left Signature: Muhammad Yuda Mashuri -->
+          <div class="text-center w-64">
+            <p>Yang membuat Laporan</p>
+            <div class="h-28 flex items-center justify-center my-1 relative overflow-hidden">
+              <img id="imgTtdYuda" src="Untitled-removebg-preview.png" alt="TTD Yuda" class="max-h-24 object-contain rotate-ttd-yuda">
+            </div>
+            <p id="signNamaYuda" class="font-bold underline uppercase">MUHAMMAD YUDA MASHURI</p>
+            <p id="signNipYuda">NIP. 19940110 202506 1 003</p>
+          </div>
+
+          <!-- Right Signature: Kasubbag Maxdonald -->
+          <div class="text-center w-64">
+            <p id="signKotaTanggal">Sei Rampah, 20 Oktober 2026</p>
+            <p>Kasubbag Keuangan, Umum dan Logistik</p>
+            <div class="h-28 flex items-center justify-center my-1 relative">
+              <img id="imgTtdMax" src="WhatsApp_Image_2025-09-19_at_10.28.42-removebg-preview.png" alt="TTD Kasubbag" class="max-h-24 object-contain">
+            </div>
+            <p class="font-bold underline uppercase">MAXDONALD OCTAVIANUS S.</p>
+            <p>NIP. 19791004 200912 1 001</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APP LOGIC ==================== -->
+  <script>
+    // 1. FIREBASE CONFIGURATION (PASTE YOUR FIREBASE CONFIG HERE IF AVAILABLE)
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
+    let isFirebaseActive = false;
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "") {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        isFirebaseActive = true;
+        console.log("Firebase initialized successfully.");
+      } catch (e) {
+        console.warn("Firebase config error, falling back to LocalStorage:", e);
+      }
+    }
+
+    // 2. KPU EXCEL MASTER KNOWLEDGE BASE (AUTO-MATCH URAIAN -> OUTPUT)
+    const kpuKnowledgeBase = {
+      "1. Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
+      "Apel Pagi Senin Rutin.": "Terlaksananya Apel Pagi Senin secara tertib dan lancar",
+      "Menginput Data Administrasi Digital Surat Masuk Ketua KPU Kab.Serdang Bedagai ke dalam Aplikasi Srikandi.": "Terlaksananya Dokumen Administrasi Digital Surat Masuk dalam Aplikasi Srikandi",
+      "Membuat Laporan SPPD, ST Kegiatan COKTAS PPDB, Mengikuti KEGIATAN PENCOCOKAN PENELITIAN TERBATAS (COKTAS) PADA PEMUTAKHIRAN DATA PEMILIH BERKELANJUTAN (PDPB) TAHUN 2026": "Tersedianya Laporan Mengikuti Kegiatan Coktas",
+      "Membuat Laporan KEGIATAN PENCOCOKAN PENELITIAN TERBATAS (COKTAS) PADA PEMUTAKHIRAN DATA PEMILIH BERKELANJUTAN (PDPB) TAHUN 2026": "Terlaksananya laporan dan data dalam Mengikuti Kegiatan COKTAS 2026",
+      "Membuat Laporan Kegiatan COKTAS PPDB": "Terlaksananya Laporan dalam Mengikuti Kegiatan Coktas ke bagian keuangan",
+      "Meminta TTD SPPD dan Laporan Kegiatan COKTAS PPDB": "Tersedianya SPPD Laporan dalam Mengikuti Kegiatan Coktas",
+      "Pengisian Data MyASN Kasubbag KUL": "Tersedianya kelengkapan data pada MyASN Kasubbag KUL bang Max",
+      "Pengisian Data MyASN Kasubbag KUL SPMT": "Tersedianya kelengkapan data pada MyASN Kasubbag KUL bang Max",
+      "Melakukan pengisian Entri SKP Triwulan III Tahun 2025 pada Aplikasi e-Kinerja BKN": "Terlaksananya pengisian dan pemutakhiran data Sasaran Kinerja Pegawai (SKP) Triwulan III Tahun 2025 melalui aplikasi e-Kinerja BKN",
+      "Mengerjakan Ekin SKP BKN Triwulan 2": "Terlaksananya Draft Laporan Ekin SKP BKN Triwulan 2",
+      "Mengikuti Kegiatan, Diskusi Zoom, dan mengerjakan tugas tugas pada LMS BPSDM Sumatera Utara pada kegaiatan Latsar CPNS 2026": "Terlaksananya partisipasi dalam Mengikuti Kegiatan Latsar CPNS 2026",
+      "Mengerjakan Laporan Mingguan Aktualisasi Latsar CPNS 2026": "Terlaksananya partisipasi dalam Mengikuti Kegiatan Latsar CPNS 2026",
+      "Mempersiapkan dan melakukan proses pengambilan gambar (syuting) video podcast Komisioner SDM dan Parhubmas bersama Ketua Komisi DPRD.": "Terlaksananya proses perekaman podcast dengan lancar sebagai bahan publikasi dan dokumentasi kegiatan.",
+      "Pengisian verifikasi data pajak pada akun Coretax dan memperoleh bukti penerimaan surat permohonan penerbitan sertifikat elektronik.": "Terlaksananya verifikasi data pajak pada Coretax dan diperolehnya bukti penerimaan permohonan sertifikat elektronik."
+    };
+
+    // 3. APP STATE
+    let currentUser = null;
+    let currentPeriodKey = "2026-10"; // Default: 21 Sep - 20 Okt 2026
+    let localDatabase = JSON.parse(localStorage.getItem('lkh_app_db') || '{}');
+
+    // Preset Periods (21st to 20th Cycle)
+    const periodPresets = [
+      { key: "2025-06", label: "Bulan Juni 2025", start: "2025-06-01", end: "2025-06-20", signDate: "20 Juni 2025" },
+      { key: "2025-07", label: "Bulan Juli 2025", start: "2025-06-21", end: "2025-07-20", signDate: "20 Juli 2025" },
+      { key: "2025-08", label: "Bulan 21 Juli - 20 Agustus 2025", start: "2025-07-21", end: "2025-08-20", signDate: "20 Agustus 2025" },
+      { key: "2025-09", label: "Bulan 21 Agustus - 20 September 2025", start: "2025-08-21", end: "2025-09-20", signDate: "20 September 2025" },
+      { key: "2025-10", label: "Bulan 21 September - 20 Oktober 2025", start: "2025-09-21", end: "2025-10-20", signDate: "20 Oktober 2025" },
+      { key: "2025-11", label: "Bulan 21 Oktober - 20 November 2025", start: "2025-10-21", end: "2025-11-20", signDate: "20 November 2025" },
+      { key: "2025-12", label: "Bulan 21 November - 20 Desember 2025", start: "2025-11-21", end: "2025-12-20", signDate: "20 Desember 2025" },
+      { key: "2026-01", label: "Bulan 21 Desember 2025 - 20 Januari 2026", start: "2025-12-21", end: "2026-01-20", signDate: "20 Januari 2026" },
+      { key: "2026-02", label: "Bulan 21 Januari - 20 Februari 2026", start: "2026-01-21", end: "2026-02-20", signDate: "20 Februari 2026" },
+      { key: "2026-03", label: "Bulan 21 Februari - 20 Maret 2026", start: "2026-02-21", end: "2026-03-20", signDate: "20 Maret 2026" },
+      { key: "2026-04", label: "Bulan 21 Maret - 20 April 2026", start: "2026-03-21", end: "2026-04-20", signDate: "20 April 2026" },
+      { key: "2026-05", label: "Bulan 21 April - 20 Mei 2026", start: "2026-04-21", end: "2026-05-20", signDate: "20 Mei 2026" },
+      { key: "2026-06", label: "Bulan 21 Mei - 20 Juni 2026", start: "2026-05-21", end: "2026-06-20", signDate: "20 Juni 2026" },
+      { key: "2026-07", label: "Bulan 21 Juni - 20 Juli 2026", start: "2026-06-21", end: "2026-07-20", signDate: "20 Juli 2026" },
+      { key: "2026-08", label: "Bulan 21 Juli - 20 Agustus 2026", start: "2026-07-21", end: "2026-08-20", signDate: "20 Agustus 2026" },
+      { key: "2026-09", label: "Bulan 21 Agustus - 20 September 2026", start: "2026-08-21", end: "2026-09-20", signDate: "20 September 2026" },
+      { key: "2026-10", label: "Bulan 21 September - 20 Oktober 2026", start: "2026-09-21", end: "2026-10-20", signDate: "20 Oktober 2026" },
+      { key: "2026-11", label: "Bulan 21 Oktober - 20 November 2026", start: "2026-10-21", end: "2026-11-20", signDate: "20 November 2026" },
+      { key: "2026-12", label: "Bulan 21 November - 20 Desember 2026", start: "2026-11-21", end: "2026-12-20", signDate: "20 Desember 2026" }
+    ];
+
+    // 4. INITIALIZATION
+    window.onload = function() {
+      populatePeriodSelector();
+      populateDatalists();
+      
+      // Auto-check logged in session
+      const savedUser = localStorage.getItem('lkh_session_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        launchDashboard();
+      }
+    };
+
+    function populatePeriodSelector() {
+      const select = document.getElementById('periodSelector');
+      select.innerHTML = '';
+      periodPresets.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.key;
+        opt.textContent = p.label;
+        if(p.key === currentPeriodKey) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function populateDatalists() {
+      const listUraian = document.getElementById('listUraian');
+      const listOutput = document.getElementById('listOutput');
+      listUraian.innerHTML = '';
+      listOutput.innerHTML = '';
+
+      Object.keys(kpuKnowledgeBase).forEach(uraian => {
+        const opt1 = document.createElement('option');
+        opt1.value = uraian;
+        listUraian.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = kpuKnowledgeBase[uraian];
+        listOutput.appendChild(opt2);
+      });
+    }
+
+    function handleUraianInput() {
+      const val = document.getElementById('inputUraian').value;
+      if (kpuKnowledgeBase[val]) {
+        document.getElementById('inputOutput').value = kpuKnowledgeBase[val];
+      }
+    }
+
+    // 5. AUTH & LOGIN LOGIC
+    function switchAuthTab(tab) {
+      if(tab === 'login') {
+        document.getElementById('formLogin').classList.remove('hidden');
+        document.getElementById('formRegister').classList.add('hidden');
+        document.getElementById('tabLogin').className = "flex-1 py-2 font-semibold text-red-700 border-b-2 border-red-700 text-center";
+        document.getElementById('tabRegister').className = "flex-1 py-2 font-semibold text-slate-400 text-center hover:text-slate-600";
+      } else {
+        document.getElementById('formLogin').classList.add('hidden');
+        document.getElementById('formRegister').classList.remove('hidden');
+        document.getElementById('tabRegister').className = "flex-1 py-2 font-semibold text-red-700 border-b-2 border-red-700 text-center";
+        document.getElementById('tabLogin').className = "flex-1 py-2 font-semibold text-slate-400 text-center hover:text-slate-600";
+      }
+    }
+
+    function applyUserPresetLogin() {
+      const preset = document.getElementById('loginUserPreset').value;
+      if (preset === 'yuda') {
+        document.getElementById('loginEmail').value = 'myudamash@gmail.com';
+        document.getElementById('loginPassword').value = '123456';
+      } else if (preset === 'max') {
+        document.getElementById('loginEmail').value = 'maxdonald@kpu.go.id';
+        document.getElementById('loginPassword').value = '123456';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      
+      if(email.includes('max')) {
+        currentUser = {
+          nama: "MAXDONALD OCTAVIANUS S.",
+          nip: "19791004 200912 1 001",
+          jabatan: "Kasubbag Keuangan, Umum dan Logistik",
+          email: email
+        };
+      } else {
+        currentUser = {
+          nama: "MUHAMMAD YUDA MASHURI",
+          nip: "19940110 202506 1 003",
+          jabatan: "Penata Kelola Sistem dan Teknologi Informasi",
+          email: email
+        };
+      }
+
+      localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+      launchDashboard();
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      currentUser = {
+        nama: document.getElementById('regNama').value,
+        nip: document.getElementById('regNip').value,
+        jabatan: document.getElementById('regJabatan').value,
+        email: document.getElementById('regEmail').value
+      };
+      localStorage.setItem('lkh_session_user', JSON.stringify(currentUser));
+      launchDashboard();
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('lkh_session_user');
+      location.reload();
+    }
+
+    function launchDashboard() {
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('mainDashboard').classList.remove('hidden');
+
+      // Update Nav & Document User Info
+      document.getElementById('navUserName').textContent = currentUser.nama;
+      document.getElementById('navUserNip').textContent = 'NIP. ' + currentUser.nip;
+
+      document.getElementById('docNama').textContent = currentUser.nama;
+      document.getElementById('docNip').textContent = currentUser.nip;
+      document.getElementById('docJabatan').textContent = currentUser.jabatan;
+
+      document.getElementById('signNamaYuda').textContent = currentUser.nama;
+      document.getElementById('signNipYuda').textContent = 'NIP. ' + currentUser.nip;
+
+      loadPeriodData();
+    }
+
+    // 6. PERIOD & DATA TABLE LOGIC
+    function changePeriod() {
+      currentPeriodKey = document.getElementById('periodSelector').value;
+      loadPeriodData();
+    }
+
+    function loadPeriodData() {
+      const periodObj = periodPresets.find(p => p.key === currentPeriodKey) || periodPresets[16];
+      document.getElementById('docPeriode').textContent = periodObj.label;
+      document.getElementById('signKotaTanggal').textContent = `Sei Rampah, ${periodObj.signDate}`;
+
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      
+      // Auto-load default working days if empty
+      if (rowsData.length === 0) {
+        rowsData = generateDaysBetween(periodObj.start, periodObj.end);
+        localStorage.setItem(storageKey, JSON.stringify(rowsData));
+      }
+
+      renderTable(rowsData);
+    }
+
+    function generateDaysBetween(startStr, endStr) {
+      const result = [];
+      const curr = new Date(startStr);
+      const end = new Date(endStr);
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+      let itemNo = 1;
+      while (curr <= end) {
+        const dayIdx = curr.getDay();
+        if (dayIdx !== 0 && dayIdx !== 6) { // Skip Sat & Sun
+          const dateFormatted = `${days[dayIdx]}, ${curr.getDate()} ${months[curr.getMonth()]} ${curr.getFullYear()}`;
+          const isSenin = (dayIdx === 1);
+
+          result.push({
+            no: itemNo++,
+            waktu: dateFormatted,
+            uraian: isSenin ? "1. Apel Pagi Senin Rutin." : "",
+            output: isSenin ? "Terlaksananya Apel Pagi Senin secara tertib dan lancar" : "",
+            keterangan: "Selesai"
+          });
+        }
+        curr.setDate(curr.getDate() + 1);
+      }
+      return result;
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('lkhTableBody');
+      tbody.innerHTML = '';
+
+      data.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+
+        tr.innerHTML = `
+          <td class="text-center font-bold">${item.no}</td>
+          <td class="font-semibold">${item.waktu}</td>
+          <td>
+            <textarea onchange="updateCell(${index}, 'uraian', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.uraian || ''}</textarea>
+          </td>
+          <td>
+            <textarea onchange="updateCell(${index}, 'output', this.value)" class="w-full bg-transparent resize-y border-0 focus:ring-1 focus:ring-red-500 rounded text-xs p-1">${item.output || ''}</textarea>
+          </td>
+          <td class="text-center">
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-xs">${item.keterangan || 'Selesai'}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateCell(index, field, value) {
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      if (rowsData[index]) {
+        rowsData[index][field] = value;
+
+        // Save pair to knowledge base if both exist
+        if (rowsData[index].uraian && rowsData[index].output) {
+          kpuKnowledgeBase[rowsData[index].uraian] = rowsData[index].output;
+          populateDatalists();
+        }
+
+        localStorage.setItem(storageKey, JSON.stringify(rowsData));
+      }
+    }
+
+    function addNewEntryFromForm() {
+      const dateVal = document.getElementById('inputTanggal').value;
+      const uraianVal = document.getElementById('inputUraian').value;
+      const outputVal = document.getElementById('inputOutput').value;
+
+      if (!uraianVal) {
+        alert("Harap isi Uraian Kinerja!");
+        return;
+      }
+
+      const userKey = currentUser.nip.replace(/\s+/g, '');
+      const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+      let rowsData = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      let dateFormatted = "Hari Kerja";
+      if (dateVal) {
+        const d = new Date(dateVal);
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        dateFormatted = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      }
+
+      rowsData.push({
+        no: rowsData.length + 1,
+        waktu: dateFormatted,
+        uraian: uraianVal,
+        output: outputVal || kpuKnowledgeBase[uraianVal] || "Selesai dilaksanakan",
+        keterangan: "Selesai"
+      });
+
+      localStorage.setItem(storageKey, JSON.stringify(rowsData));
+      renderTable(rowsData);
+
+      // Clear input form
+      document.getElementById('inputUraian').value = '';
+      document.getElementById('inputOutput').value = '';
+    }
+
+    function generateWorkingDays() {
+      if (confirm("Regenerate tabel hari kerja untuk periode ini? (Data yang sudah diketik tidak akan hilang pada baris tanggal yang sama)")) {
+        const periodObj = periodPresets.find(p => p.key === currentPeriodKey) || periodPresets[16];
+        const newRows = generateDaysBetween(periodObj.start, periodObj.end);
+        
+        const userKey = currentUser.nip.replace(/\s+/g, '');
+        const storageKey = `lkh_data_${userKey}_${currentPeriodKey}`;
+        localStorage.setItem(storageKey, JSON.stringify(newRows));
+        renderTable(newRows);
+      }
+    }
+
+    function exportJSONBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Backup_Ekin_KPU_${currentUser.nama.replace(/\s+/g,'_')}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+  </script>
+</body>
+</html>
